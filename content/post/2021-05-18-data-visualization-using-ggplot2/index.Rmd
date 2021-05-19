@@ -19,7 +19,8 @@ ggplot( penguins,
       subtitle = "Dimensions for   Adelie, Chinstrap, and Gentoo Penguins",
        x = "Bill depth (mm)", 
        y = "Bill length (mm)",
-       colour = "Species")
+       colour = "Species"） +
+       facet_grid(species ~ sex)
 
 ```
 
