@@ -7,9 +7,9 @@ categories:
   - ggplot2
 tags: []
 ---
+## Data Visualization Exercise 2
 
-
-## Temperature vs Pressure
+## 1. Temperature vs Pressure
 We will study the relationship between temperature and pressure through a density plot
 
 ```{r echo = FALSE, warning = FALSE}
@@ -27,4 +27,52 @@ ggplot(data = datasets::pressure, aes(x = pressure, fill = temperature)) +
 
 * However, we still need a larger sample to test our observations.
 
+We could also use another plot to do this data visualization:
 
+```{r message = FALSE, warning=FALSE}
+library(ggplot2)
+ggplot(data = datasets::pressure, aes(x = pressure)) +
+  geom_boxplot() +
+  labs(title = "Pressure vs Temperature",
+       x = "Pressure(mercury in millimeters)",
+       y = "Temperature(Celsius)") +
+  theme(axis.ticks.y = element_blank(),
+        axis.text.y = element_blank())
+```
+
+
+
+## 2. Performances Among Different Insect Sprays 
+
+We will study the counts of insects in agricultural experimental units treated with different insecticides through a ridge plot
+
+```{r message = FALSE, warning = FALSE}
+library(ggridges)
+ggplot(data = datasets::InsectSprays, aes(x = count, y = spray, fill = spray, color = spray)) + 
+  geom_density_ridges(alpha = 0.5) +
+  labs(title = "Counts of Insects of Different Insecticides", 
+       x = "Count(units)",
+       y = "Sprays",
+       fill = "Sprays")
+```
+
+* From the ridge plot we could find Spray F performs better than others.
+
+* Performances between Spray A and Spray B are quite similar.
+
+
+We could use another simple plot to show the above data:
+
+```{r echo=FALSE, warning=FALSE}
+ggplot(datasets::InsectSprays, aes(x = count, y = spray, color = spray)) +
+  geom_point(size = 2, alpha = 0.5) +
+  labs(
+    title = "How are the differences among Sprays?", 
+    x = "Count (units)", y = "Sprays"
+    ) +
+  facet_grid(~ spray)
+
+```
+
+Discussion:
+By doing this assignment, I have practiced several plots to do data visualization and it's quite interesting process for me to explore different plot types. However, I still think it is a bit harder for me to distinguish categorical and numerical data. So, I have tried so many data in datasets to find appropriate way to visualize them. The most difficult one I don't know how to deal with is "HairColorEye" data, and hope to know how could we visualize such kind of data. Thanks!

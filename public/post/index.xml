@@ -13,10 +13,11 @@
       <pubDate>Fri, 21 May 2021 00:00:00 +0000</pubDate>
       
       <guid>/2021/05/21/assignment-01/</guid>
-      <description>Temperature vs PressureWe will study the relationship between temperature and pressure through a density plot
+      <description>Data Visualization Exercise 21. Temperature vs PressureWe will study the relationship between temperature and pressure through a density plot
 From the chart above we could easily found the temperature and pressure may have certain positive relation.
 However, we still need a larger sample to test our observations.
-</description>
+We could also use another plot to do this data visualization:
+library(ggplot2)ggplot(data = datasets::pressure, aes(x = pressure)) +geom_boxplot() +labs(title = &amp;quot;Pressure vs Temperature&amp;quot;,x = &amp;quot;Pressure(mercury in millimeters)&amp;quot;,y = &amp;quot;Temperature(Celsius)&amp;quot;) +theme(axis.</description>
     </item>
     
     <item>
