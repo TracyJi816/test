@@ -1,0 +1,65 @@
+---
+title: Data Wrangling using Tidyverse
+author: ''
+date: '2021-05-25'
+slug: data-wrangling-using-tidyverse
+categories:
+  - tidyverse
+tags: []
+---
+
+## Import the hotels.csv file
+```{r warning=FALSE}
+library(tidyverse)
+hotels <- read_csv("hotels.csv")
+head(hotels)
+names(hotels)
+```
+
+## Select
+```{r}
+
+select(hotels, lead_time)
+select(hotels, hotel, lead_time)
+hotels %>%
+  select(hotel, lead_time) %>%
+  arrange(desc(lead_time))
+```
+## Select a range of variables
+```{r}
+hotels %>%
+  select(hotel:arrival_date_month)
+
+hotels %>%
+  select(starts_with("arrival"))
+```
+
+##Select a range of rows / cases
+```{r}
+hotels %>%
+  # We will select 1st, 5th, 8th, and 10th rows
+  slice(c(1,5,8,10))
+hotels %>%
+  filter(adults == "0", children >= "1" | babies >= "1") %>%
+  # | means "or"
+  select(hotel, adults, babies, children)
+
+```
+## Mutation
+
+```{r}
+hotels %>%
+  mutate(little_ones = children + babies) %>%
+  select(children, babies, little_ones) %>%
+  arrange(desc(little_ones))
+
+```
+
+## Summary
+```{r}
+summary <- hotels %>%
+  group_by(hotel) %>%
+  summarize(mean_adr = mean(adr))
+summary
+```
+
