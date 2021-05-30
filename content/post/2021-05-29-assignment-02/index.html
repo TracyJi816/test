@@ -1,0 +1,209 @@
+---
+title: Assignment 02
+author: 'Tracy Ji'
+date: '2021-05-29'
+slug: assignment-02
+categories:
+  - tidyverse
+tags: []
+---
+
+<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
+
+
+<div id="import-the-dataset-reddit_vm.csv-and-explore-the-data" class="section level2">
+<h2>Import the dataset reddit_vm.csv and explore the data</h2>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --</code></pre>
+<pre><code>## v ggplot2 3.3.3     v purrr   0.3.4
+## v tibble  3.1.1     v dplyr   1.0.6
+## v tidyr   1.1.3     v stringr 1.4.0
+## v readr   1.4.0     v forcats 0.5.1</code></pre>
+<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>vaccine &lt;- read_csv(&quot;reddit_vm.csv&quot;)</code></pre>
+<pre><code>## 
+## -- Column specification --------------------------------------------------------
+## cols(
+##   title = col_character(),
+##   score = col_double(),
+##   id = col_character(),
+##   url = col_character(),
+##   comms_num = col_double(),
+##   created = col_double(),
+##   body = col_character(),
+##   timestamp = col_datetime(format = &quot;&quot;)
+## )</code></pre>
+<pre class="r"><code>head(vaccine)</code></pre>
+<pre><code>## # A tibble: 6 x 8
+##   title       score id    url        comms_num created body  timestamp          
+##   &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt; &lt;dttm&gt;             
+## 1 Health Can~     7 lt74~ https://w~         0  1.61e9 &lt;NA&gt;  2021-02-27 06:33:45
+## 2 COVID-19 i~     2 lsh0~ https://w~         1  1.61e9 &lt;NA&gt;  2021-02-26 07:11:07
+## 3 Coronaviru~     6 lohl~ https://w~         0  1.61e9 &lt;NA&gt;  2021-02-21 07:50:08
+## 4 Canadian g~     1 lnpt~ https://w~         0  1.61e9 &lt;NA&gt;  2021-02-20 06:35:13
+## 5 Canada: Pf~     6 lksl~ https://w~         0  1.61e9 &lt;NA&gt;  2021-02-16 11:36:28
+## 6 Canada: Ox~     5 lftb~ https://w~         0  1.61e9 &lt;NA&gt;  2021-02-09 13:17:11</code></pre>
+<pre class="r"><code>names(vaccine)</code></pre>
+<pre><code>## [1] &quot;title&quot;     &quot;score&quot;     &quot;id&quot;        &quot;url&quot;       &quot;comms_num&quot; &quot;created&quot;  
+## [7] &quot;body&quot;      &quot;timestamp&quot;</code></pre>
+</div>
+<div id="select-data" class="section level2">
+<h2>Select data</h2>
+<pre class="r"><code>vaccine %&gt;%
+  select(title, score) %&gt;%
+  arrange(desc(score))</code></pre>
+<pre><code>## # A tibble: 1,531 x 2
+##    title                                                 score
+##    &lt;chr&gt;                                                 &lt;dbl&gt;
+##  1 I would rage if this was handed to me...               1184
+##  2 From /r/Rage                                             40
+##  3 Vaccines exposed                                         37
+##  4 Do not give a platform for anti-vaxxers to propagate.    35
+##  5 Oh no! I got vaccinated!                                 30
+##  6 Vaccines have a huge side effect                         28
+##  7 Meet my friend&#39;s anti-vax wife                           28
+##  8 Typical debate with an anti-vaxer (I&#39;m teal)             27
+##  9 How ironic                                               26
+## 10 Vaccinate folks.                                         26
+## # ... with 1,521 more rows</code></pre>
+</div>
+<div id="select-a-range-of-rows" class="section level2">
+<h2>Select a range of rows</h2>
+<pre class="r"><code>vaccine %&gt;%
+  # We will select 1st, 5th, 8th, and 10th rows
+  slice(c(1,5,8,10))</code></pre>
+<pre><code>## # A tibble: 4 x 8
+##   title     score id     url      comms_num created body     timestamp          
+##   &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;        &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;    &lt;dttm&gt;             
+## 1 Health C~     7 lt74vw https:/~         0  1.61e9  &lt;NA&gt;    2021-02-27 06:33:45
+## 2 Canada: ~     6 lkslm6 https:/~         0  1.61e9  &lt;NA&gt;    2021-02-16 11:36:28
+## 3 Fuck you~    10 g6jkhp https:/~         8  1.59e9 &quot;https:~ 2020-04-23 20:23:42
+## 4 Comment       0 ej9xu~ &lt;NA&gt;             0  1.55e9 &quot;What d~ 2019-03-25 02:45:21</code></pre>
+<pre class="r"><code>vaccine %&gt;%
+  filter(score &gt;= &quot;1&quot;)</code></pre>
+<pre><code>## # A tibble: 1,335 x 8
+##    title     score id    url      comms_num created body     timestamp          
+##    &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;        &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;    &lt;dttm&gt;             
+##  1 Health C~     7 lt74~ https:/~         0  1.61e9  &lt;NA&gt;    2021-02-27 06:33:45
+##  2 COVID-19~     2 lsh0~ https:/~         1  1.61e9  &lt;NA&gt;    2021-02-26 07:11:07
+##  3 Coronavi~     6 lohl~ https:/~         0  1.61e9  &lt;NA&gt;    2021-02-21 07:50:08
+##  4 Canadian~     1 lnpt~ https:/~         0  1.61e9  &lt;NA&gt;    2021-02-20 06:35:13
+##  5 Canada: ~     6 lksl~ https:/~         0  1.61e9  &lt;NA&gt;    2021-02-16 11:36:28
+##  6 Canada: ~     5 lftb~ https:/~         0  1.61e9  &lt;NA&gt;    2021-02-09 13:17:11
+##  7 Comment       1 ej9x~ &lt;NA&gt;             0  1.55e9 &quot;Your O~ 2019-03-25 02:34:53
+##  8 Fuck you~    10 g6jk~ https:/~         8  1.59e9 &quot;https:~ 2020-04-23 20:23:42
+##  9 Comment       1 ej9x~ &lt;NA&gt;             0  1.55e9 &quot;When t~ 2019-03-25 02:35:47
+## 10 Comment       2 ejac~ &lt;NA&gt;             0  1.55e9 &quot;The \&quot;~ 2019-03-25 05:50:20
+## # ... with 1,325 more rows</code></pre>
+</div>
+<div id="mutate" class="section level2">
+<h2>Mutate</h2>
+<pre class="r"><code>vaccine %&gt;%
+  mutate(bigger_ones = score + comms_num) %&gt;%
+  select(score, comms_num, bigger_ones) %&gt;%
+  arrange(desc(bigger_ones))</code></pre>
+<pre><code>## # A tibble: 1,531 x 3
+##    score comms_num bigger_ones
+##    &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
+##  1  1184       596        1780
+##  2     0       166         166
+##  3    18        74          92
+##  4     7        49          56
+##  5     1        55          56
+##  6    40        13          53
+##  7     4        46          50
+##  8     0        49          49
+##  9    19        24          43
+## 10    27        16          43
+## # ... with 1,521 more rows</code></pre>
+</div>
+<div id="group-and-summarize-data" class="section level2">
+<h2>Group and Summarize Data</h2>
+<pre class="r"><code>summary &lt;- vaccine %&gt;%
+  group_by(score) %&gt;%
+  summarize(mean_score = mean(score))
+summary</code></pre>
+<pre><code>## # A tibble: 41 x 2
+##    score mean_score
+##    &lt;dbl&gt;      &lt;dbl&gt;
+##  1   -12        -12
+##  2   -10        -10
+##  3    -6         -6
+##  4    -5         -5
+##  5    -4         -4
+##  6    -3         -3
+##  7    -2         -2
+##  8    -1         -1
+##  9     0          0
+## 10     1          1
+## # ... with 31 more rows</code></pre>
+</div>
+<div id="drop-data" class="section level2">
+<h2>Drop Data</h2>
+<pre class="r"><code>library(dplyr)
+df &lt;- tibble(x = c(1,2,NA), y = c(&quot;a&quot;,NA, &quot;b&quot;))
+df %&gt;% drop_na()</code></pre>
+<pre><code>## # A tibble: 1 x 2
+##       x y    
+##   &lt;dbl&gt; &lt;chr&gt;
+## 1     1 a</code></pre>
+</div>
+<div id="pivot" class="section level2">
+<h2>Pivot</h2>
+<pre class="r"><code>pnl &lt;- tibble(
+  x = 1:4,
+  a = c(1, 1,0, 0),
+  b = c(0, 1, 1, 1),
+  y1 = rnorm(4),
+  y2 = rnorm(4),
+  z1 = rep(3, 4),
+  z2 = rep(-2, 4),
+)
+
+pnl %&gt;% 
+  pivot_longer(
+    !c(x, a, b), 
+    names_to = c(&quot;.value&quot;, &quot;time&quot;), 
+    names_pattern = &quot;(.)(.)&quot;
+  )</code></pre>
+<pre><code>## # A tibble: 8 x 6
+##       x     a     b time       y     z
+##   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;
+## 1     1     1     0 1     -0.719     3
+## 2     1     1     0 2      0.275    -2
+## 3     2     1     1 1     -1.52      3
+## 4     2     1     1 2     -2.25     -2
+## 5     3     0     1 1     -0.226     3
+## 6     3     0     1 2     -0.837    -2
+## 7     4     0     1 1     -0.925     3
+## 8     4     0     1 2     -1.34     -2</code></pre>
+</div>
+<div id="gather" class="section level2">
+<h2>Gather</h2>
+<pre class="r"><code>library(dplyr)
+situation &lt;- tibble(time = as.Date(&#39;2021-04-27&#39;) + 0:9,
+                    X = rnorm(10, 0, 1), 
+                    Y = rnorm(10, 0, 2),
+                    Z = rnorm(10, 0,4))
+gather(situation, &quot;score&quot;, &quot;comms_num&quot;,-time)</code></pre>
+<pre><code>## # A tibble: 30 x 3
+##    time       score comms_num
+##    &lt;date&gt;     &lt;chr&gt;     &lt;dbl&gt;
+##  1 2021-04-27 X       0.148  
+##  2 2021-04-28 X       0.553  
+##  3 2021-04-29 X      -1.16   
+##  4 2021-04-30 X      -0.00650
+##  5 2021-05-01 X       0.107  
+##  6 2021-05-02 X      -1.64   
+##  7 2021-05-03 X      -0.569  
+##  8 2021-05-04 X      -0.617  
+##  9 2021-05-05 X       1.33   
+## 10 2021-05-06 X      -0.762  
+## # ... with 20 more rows</code></pre>
+</div>
+<div id="discussion" class="section level2">
+<h2>Discussion</h2>
+<p>I felt it is still hard for me to master tidyverse and dplyr without practicing enough examples. When should we use dplyr and when should we use another one are my confusion. Suppose I need to explore more in the future.</p>
+</div>

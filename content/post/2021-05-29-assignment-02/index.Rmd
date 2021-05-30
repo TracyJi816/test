@@ -1,0 +1,86 @@
+---
+title: Assignment 02
+author: 'Tracy Ji'
+date: '2021-05-29'
+slug: assignment-02
+categories:
+  - tidyverse
+tags: []
+---
+
+## Import the dataset reddit_vm.csv and explore the data
+```{r warning=FALSE}
+library(tidyverse)
+vaccine <- read_csv("reddit_vm.csv")
+head(vaccine)
+names(vaccine)
+```
+
+## Select data
+```{r}
+vaccine %>%
+  select(title, score) %>%
+  arrange(desc(score))
+```
+
+## Select a range of rows 
+```{r}
+vaccine %>%
+  # We will select 1st, 5th, 8th, and 10th rows
+  slice(c(1,5,8,10))
+vaccine %>%
+  filter(score >= "1")
+```
+
+## Mutate
+```{r}
+vaccine %>%
+  mutate(bigger_ones = score + comms_num) %>%
+  select(score, comms_num, bigger_ones) %>%
+  arrange(desc(bigger_ones))
+```
+
+## Group and Summarize Data
+```{r}
+summary <- vaccine %>%
+  group_by(score) %>%
+  summarize(mean_score = mean(score))
+summary
+```
+## Drop Data
+```{r}
+library(dplyr)
+df <- tibble(x = c(1,2,NA), y = c("a",NA, "b"))
+df %>% drop_na()
+```
+
+## Pivot
+```{r}
+pnl <- tibble(
+  x = 1:4,
+  a = c(1, 1,0, 0),
+  b = c(0, 1, 1, 1),
+  y1 = rnorm(4),
+  y2 = rnorm(4),
+  z1 = rep(3, 4),
+  z2 = rep(-2, 4),
+)
+
+pnl %>% 
+  pivot_longer(
+    !c(x, a, b), 
+    names_to = c(".value", "time"), 
+    names_pattern = "(.)(.)"
+  )
+```
+## Gather
+```{r}
+library(dplyr)
+situation <- tibble(time = as.Date('2021-04-27') + 0:9,
+                    X = rnorm(10, 0, 1), 
+                    Y = rnorm(10, 0, 2),
+                    Z = rnorm(10, 0,4))
+gather(situation, "score", "comms_num",-time)
+```
+## Discussion
+I felt it is still hard for me to master tidyverse and dplyr without practicing enough examples. When should we use dplyr and when should we use another one are my confusion. Suppose I need to explore more in the future.
