@@ -1,79 +1,14 @@
-<!DOCTYPE html>
-<html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Hugo 0.83.1" />
+---
+title: Assignment 02
+author: 'Tracy Ji'
+date: '2021-05-29'
+slug: assignment-02
+categories:
+  - tidyverse
+tags: []
+---
 
-
-<title>Assignment 02 - Tracy - test</title>
-<meta property="og:title" content="Assignment 02 - Tracy - test">
-
-
-  <link href='/favicon.ico' rel='icon' type='image/x-icon'/>
-
-
-
-  
-
-
-
-
-
-
-
-
-<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
-
-
-
-<link rel="stylesheet" href="/css/fonts.css" media="all">
-<link rel="stylesheet" href="/css/main.css" media="all">
-
-
-
-  </head>
-  <body>
-    <div class="wrapper">
-      <header class="header">
-        <nav class="nav">
-  <a href="/" class="nav-logo">
-    <img src="/images/logo.png"
-         width="50"
-         height="50"
-         alt="Logo">
-  </a>
-
-  <ul class="nav-links">
-    
-    <li><a href="/about/">About</a></li>
-    
-    <li><a href="https://github.com/TracyJi816">GitHub</a></li>
-    
-    <li><a href="https://twitter.com/rstudio">Twitter</a></li>
-    
-  </ul>
-</nav>
-
-      </header>
-
-
-<main class="content" role="main">
-
-  <article class="article">
-    
-    <span class="article-duration">5 min read</span>
-    
-
-    <h1 class="article-title">Assignment 02</h1>
-
-    
-    <span class="article-date">2021-05-29</span>
-    
-
-    <div class="article-content">
-      
-<script src="/2021/05/29/assignment-02/index_files/header-attrs/header-attrs.js"></script>
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
 <div id="import-the-dataset-reddit_vm.csv-and-explore-the-data" class="section level2">
@@ -236,14 +171,14 @@ pnl %&gt;%
 <pre><code>## # A tibble: 8 x 6
 ##       x     a     b time       y     z
 ##   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;
-## 1     1     1     0 1     -0.719     3
-## 2     1     1     0 2      0.275    -2
-## 3     2     1     1 1     -1.52      3
-## 4     2     1     1 2     -2.25     -2
-## 5     3     0     1 1     -0.226     3
-## 6     3     0     1 2     -0.837    -2
-## 7     4     0     1 1     -0.925     3
-## 8     4     0     1 2     -1.34     -2</code></pre>
+## 1     1     1     0 1     -1.73      3
+## 2     1     1     0 2      0.104    -2
+## 3     2     1     1 1      0.321     3
+## 4     2     1     1 2      1.06     -2
+## 5     3     0     1 1     -0.161     3
+## 6     3     0     1 2     -1.70     -2
+## 7     4     0     1 1     -0.906     3
+## 8     4     0     1 2      1.32     -2</code></pre>
 </div>
 <div id="gather" class="section level2">
 <h2>Gather</h2>
@@ -256,63 +191,19 @@ gather(situation, &quot;score&quot;, &quot;comms_num&quot;,-time)</code></pre>
 <pre><code>## # A tibble: 30 x 3
 ##    time       score comms_num
 ##    &lt;date&gt;     &lt;chr&gt;     &lt;dbl&gt;
-##  1 2021-04-27 X       0.148  
-##  2 2021-04-28 X       0.553  
-##  3 2021-04-29 X      -1.16   
-##  4 2021-04-30 X      -0.00650
-##  5 2021-05-01 X       0.107  
-##  6 2021-05-02 X      -1.64   
-##  7 2021-05-03 X      -0.569  
-##  8 2021-05-04 X      -0.617  
-##  9 2021-05-05 X       1.33   
-## 10 2021-05-06 X      -0.762  
+##  1 2021-04-27 X         1.21 
+##  2 2021-04-28 X         2.01 
+##  3 2021-04-29 X        -2.42 
+##  4 2021-04-30 X         0.267
+##  5 2021-05-01 X         2.69 
+##  6 2021-05-02 X         1.44 
+##  7 2021-05-03 X        -0.230
+##  8 2021-05-04 X         2.50 
+##  9 2021-05-05 X        -0.446
+## 10 2021-05-06 X         1.30 
 ## # ... with 20 more rows</code></pre>
 </div>
 <div id="discussion" class="section level2">
 <h2>Discussion</h2>
 <p>I felt it is still hard for me to master tidyverse and dplyr without practicing enough examples. When should we use dplyr and when should we use another one are my confusion. Suppose I need to explore more in the future.</p>
 </div>
-
-    </div>
-  </article>
-
-  
-
-
-</main>
-
-      <footer class="footer">
-        <ul class="footer-links">
-          <li>
-            <a href="/index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
-          </li>
-          <li>
-            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
-          </li>
-        </ul>
-      </footer>
-
-    </div>
-    
-
-
-
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-
-
-
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
-<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
-
-
-
-    
-<script src="/js/math-code.js"></script>
-<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-
-
-    
-  </body>
-</html>
-
