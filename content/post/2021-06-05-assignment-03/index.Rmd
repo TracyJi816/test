@@ -1,0 +1,23 @@
+---
+title: Assignment 03
+author: 'Tracy Ji'
+date: '2021-06-05'
+slug: assignment-03
+categories:
+  - tidyverse
+tags: []
+---
+
+## Import data lego.csv
+```{r}
+library(tidyverse)
+read_csv("lego_sales.csv")
+lego_sales %>%
+  mutate(firstname = fct_infreq(first_name)) %>%
+  ggplot(mapping = aes(x = first_name)) + geom_bar()
+
+
+  
+  
+```
+
