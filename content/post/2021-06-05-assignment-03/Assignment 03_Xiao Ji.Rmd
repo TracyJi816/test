@@ -1,0 +1,105 @@
+---
+title: Assignment 03
+author: Tracy Ji
+date: '2021-06-05'
+slug: assignment-03
+categories:
+  - tidyverse
+tags: []
+---
+
+## Import lego_sales.csv and find the most three common first names in customers are :Jackson	13, Jacob	11 and Joseph	11	
+```{r}
+library(tidyverse)
+read_csv("lego_sales.csv")
+lego_sales %>%
+  mutate(first_name = fct_infreq(first_name)) %>%
+  count(first_name)
+
+```
+
+## Find the most three common themes are Star Wars	75, Nexo Knights	64, and Gear/Mixels	55
+```{r}
+library(tidyverse)
+read_csv("lego_sales.csv")
+lego_sales %>%
+  mutate(theme = fct_infreq(theme)) %>%
+  count(theme)
+ 
+```
+
+## Find the most three common subthemes under above situation are "The Force Awakens", "Series 9", "Role-Play toys	7 & Stationery	7"
+```{r}
+library(tidyverse)
+read_csv("lego_sales.csv")
+lego_sales %>%
+  filter(theme == "Star Wars") %>%
+  count(subtheme, sort = TRUE)
+
+```
+
+```{r}
+library(tidyverse)
+read_csv("lego_sales.csv")
+lego_sales %>%
+  filter(theme == "Gear") %>%
+  count(subtheme, sort = TRUE)
+```
+
+```{r}
+library(tidyverse)
+read_csv("lego_sales.csv")
+lego_sales %>%
+  filter(theme == "Mixels") %>%
+  count(subtheme, sort = TRUE)
+```
+
+## Create a new variable called age_group and group the ages into the following categories: “18 and under”, “19 - 25”, “26 - 35”, “36 - 50”, “51 and over”.
+```{r}
+lego_sales <- lego_sales %>%
+  mutate(age_group = case_when(age <= 18 ~ "18 and under", age >= 19 & age <= 25 ~ "19 - 25", age >= 26 & age <= 35 ~ "26 - 35", age >= 36 & age <= 50 ~ "36 - 50", age >= 51 ~ "51 and over" ))
+```
+
+## The probability of a randomly selected customer in the 19-25 age group is 20.8% 
+```{r}
+lego_sales %>%
+  count(age_group, sort = TRUE) 
+```
+
+## The probability a randomly selected customer is in the 19-26 age group and purchased a Duplo theme set is 9/129
+```{r}
+lego_sales %>%
+  filter(age_group == "19 - 25") %>%
+  count(theme == "Duplo", sort = TRUE) 
+```
+
+## The probability a randomly selected customer is in the 19-26 age group given purchased a Duplo theme set is 9/35
+```{r}
+lego_sales %>%
+  filter(theme == "Duplo") %>%
+  count(age_group == "19 - 25", sort = TRUE)
+```
+
+## Which age group has purchased the largest number of lego sets? How many did they purchase?
+```{r}
+lego_sales %>% 
+  group_by(age_group) %>% 
+  summarise(total_number = sum(quantity) ) %>%
+  arrange(desc(total_number))
+```
+
+* It can be seen that 36-50 age group has purchased the most lego sets (313)
+
+## Which age group has spent the most money on legos? How much did they spend?
+```{r}
+lego_sales %>%
+  mutate(money_spent = us_price * quantity
+  ) %>%
+  group_by(age_group) %>%
+  summarise(total_spent = sum(money_spent)
+  ) %>%
+  arrange(desc(total_spent))
+```
+
+* The outcome is that age group of 36-50 has spent the most on lego sets with amount $9532.87.
+
