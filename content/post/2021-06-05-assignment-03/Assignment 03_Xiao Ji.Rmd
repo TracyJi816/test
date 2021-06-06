@@ -103,3 +103,43 @@ lego_sales %>%
 
 * The outcome is that age group of 36-50 has spent the most on lego sets with amount $9532.87.
 
+## My question would be: "Which theme has made up the most revenue in 2018?"
+```{r warning = FALSE}
+lego_sales %>%
+  mutate(money_spent = us_price * quantity
+  ) %>%
+  group_by(theme) %>%
+  summarise(total_spent = sum(money_spent)
+  ) %>%
+  arrange(desc(total_spent)) 
+ 
+```
+* Of course, the answer is "Star Wars".
+
+## Visualization of the above result
+```{r}
+library(tidyverse)
+lego_sales %>%
+  mutate(money_spent = us_price * quantity
+  ) %>%
+  group_by(theme)%>%
+ summarize(total_spent = sum(money_spent)) %>%
+  ggplot(aes(x = total_spent, y = theme, color = theme)) +
+  geom_point() +
+  coord_polar(theta = "x")
+```
+## Change above visualization
+```{r}
+library(tidyverse)
+lego_sales %>%
+  mutate(money_spent = us_price * quantity
+  ) %>%
+  group_by(theme)%>%
+ summarize(total_spent = sum(money_spent)) %>%
+  ggplot(aes(x = total_spent, y = theme, color = total_spent)) + 
+  geom_point()
+```
+
+* I add this annotation to identify I have changed the color of the above result
+
+
