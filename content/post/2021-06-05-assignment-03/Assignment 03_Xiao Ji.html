@@ -1,0 +1,404 @@
+---
+title: Assignment 03
+author: Tracy Ji
+date: '2021-06-05'
+slug: assignment-03
+categories:
+  - tidyverse
+tags: []
+---
+
+<script src="Assignment 03_Xiao Ji_files/header-attrs/header-attrs.js"></script>
+
+
+<div id="import-lego_sales.csv-and-find-the-most-three-common-first-names-in-customers-are-jackson-13-jacob-11-and-joseph-11" class="section level2">
+<h2>Import lego_sales.csv and find the most three common first names in customers are :Jackson 13, Jacob 11 and Joseph 11</h2>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --</code></pre>
+<pre><code>## v ggplot2 3.3.3     v purrr   0.3.4
+## v tibble  3.1.1     v dplyr   1.0.6
+## v tidyr   1.1.3     v stringr 1.4.0
+## v readr   1.4.0     v forcats 0.5.1</code></pre>
+<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>lego_sales &lt;- read_csv(&quot;lego_sales.csv&quot;)</code></pre>
+<pre><code>## 
+## -- Column specification --------------------------------------------------------
+## cols(
+##   first_name = col_character(),
+##   last_name = col_character(),
+##   age = col_double(),
+##   phone_number = col_character(),
+##   set_id = col_double(),
+##   number = col_character(),
+##   theme = col_character(),
+##   subtheme = col_character(),
+##   year = col_double(),
+##   name = col_character(),
+##   pieces = col_double(),
+##   us_price = col_double(),
+##   image_url = col_character(),
+##   quantity = col_double()
+## )</code></pre>
+<pre class="r"><code>lego_sales %&gt;%
+  mutate(first_name = fct_infreq(first_name)) %&gt;%
+  count(first_name)</code></pre>
+<pre><code>## # A tibble: 211 x 2
+##    first_name     n
+##    &lt;fct&gt;      &lt;int&gt;
+##  1 Jackson       13
+##  2 Jacob         11
+##  3 Joseph        11
+##  4 Michael       10
+##  5 Audrey         8
+##  6 Connor         8
+##  7 Kaitlyn        8
+##  8 Lucas          8
+##  9 Amanda         7
+## 10 Joshua         7
+## # ... with 201 more rows</code></pre>
+</div>
+<div id="find-the-most-three-common-themes-are-star-wars-75-nexo-knights-64-and-gearmixels-55" class="section level2">
+<h2>Find the most three common themes are Star Wars 75, Nexo Knights 64, and Gear/Mixels 55</h2>
+<pre class="r"><code>library(tidyverse)
+read_csv(&quot;lego_sales.csv&quot;)</code></pre>
+<pre><code>## 
+## -- Column specification --------------------------------------------------------
+## cols(
+##   first_name = col_character(),
+##   last_name = col_character(),
+##   age = col_double(),
+##   phone_number = col_character(),
+##   set_id = col_double(),
+##   number = col_character(),
+##   theme = col_character(),
+##   subtheme = col_character(),
+##   year = col_double(),
+##   name = col_character(),
+##   pieces = col_double(),
+##   us_price = col_double(),
+##   image_url = col_character(),
+##   quantity = col_double()
+## )</code></pre>
+<pre><code>## # A tibble: 620 x 14
+##    first_name last_name    age phone_number set_id number theme  subtheme   year
+##    &lt;chr&gt;      &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;     &lt;dbl&gt;
+##  1 Kimberly   Beckstead     24 216-555-2549  24701 76062  DC Co~ Mighty M~  2018
+##  2 Neel       Garvin        35 819-555-3189  25626 70595  Ninja~ Rise of ~  2018
+##  3 Neel       Garvin        35 819-555-3189  24665 21031  Archi~ &lt;NA&gt;       2018
+##  4 Chelsea    Bouchard      41 &lt;NA&gt;          24695 31048  Creat~ &lt;NA&gt;       2018
+##  5 Chelsea    Bouchard      41 &lt;NA&gt;          25626 70595  Ninja~ Rise of ~  2018
+##  6 Chelsea    Bouchard      41 &lt;NA&gt;          24721 10831  Duplo  &lt;NA&gt;       2018
+##  7 Bryanna    Welsh         19 &lt;NA&gt;          24797 75138  Star ~ Episode V  2018
+##  8 Bryanna    Welsh         19 &lt;NA&gt;          24701 76062  DC Co~ Mighty M~  2018
+##  9 Caleb      Garcia-Wi~    37 907-555-9236  24730 41115  Frien~ &lt;NA&gt;       2018
+## 10 Caleb      Garcia-Wi~    37 907-555-9236  25611 21127  Minec~ Minifig-~  2018
+## # ... with 610 more rows, and 5 more variables: name &lt;chr&gt;, pieces &lt;dbl&gt;,
+## #   us_price &lt;dbl&gt;, image_url &lt;chr&gt;, quantity &lt;dbl&gt;</code></pre>
+<pre class="r"><code>lego_sales %&gt;%
+  mutate(theme = fct_infreq(theme)) %&gt;%
+  count(theme)</code></pre>
+<pre><code>## # A tibble: 25 x 2
+##    theme            n
+##    &lt;fct&gt;        &lt;int&gt;
+##  1 Star Wars       75
+##  2 Nexo Knights    64
+##  3 Gear            55
+##  4 Mixels          55
+##  5 City            45
+##  6 Friends         42
+##  7 Ninjago         38
+##  8 Duplo           35
+##  9 Bionicle        34
+## 10 Creator         25
+## # ... with 15 more rows</code></pre>
+</div>
+<div id="find-the-most-three-common-subthemes-under-above-situation-are-the-force-awakens-series-9-role-play-toys-7-stationery-7" class="section level2">
+<h2>Find the most three common subthemes under above situation are “The Force Awakens”, “Series 9”, “Role-Play toys 7 &amp; Stationery 7”</h2>
+<pre class="r"><code>library(tidyverse)
+read_csv(&quot;lego_sales.csv&quot;)</code></pre>
+<pre><code>## 
+## -- Column specification --------------------------------------------------------
+## cols(
+##   first_name = col_character(),
+##   last_name = col_character(),
+##   age = col_double(),
+##   phone_number = col_character(),
+##   set_id = col_double(),
+##   number = col_character(),
+##   theme = col_character(),
+##   subtheme = col_character(),
+##   year = col_double(),
+##   name = col_character(),
+##   pieces = col_double(),
+##   us_price = col_double(),
+##   image_url = col_character(),
+##   quantity = col_double()
+## )</code></pre>
+<pre><code>## # A tibble: 620 x 14
+##    first_name last_name    age phone_number set_id number theme  subtheme   year
+##    &lt;chr&gt;      &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;     &lt;dbl&gt;
+##  1 Kimberly   Beckstead     24 216-555-2549  24701 76062  DC Co~ Mighty M~  2018
+##  2 Neel       Garvin        35 819-555-3189  25626 70595  Ninja~ Rise of ~  2018
+##  3 Neel       Garvin        35 819-555-3189  24665 21031  Archi~ &lt;NA&gt;       2018
+##  4 Chelsea    Bouchard      41 &lt;NA&gt;          24695 31048  Creat~ &lt;NA&gt;       2018
+##  5 Chelsea    Bouchard      41 &lt;NA&gt;          25626 70595  Ninja~ Rise of ~  2018
+##  6 Chelsea    Bouchard      41 &lt;NA&gt;          24721 10831  Duplo  &lt;NA&gt;       2018
+##  7 Bryanna    Welsh         19 &lt;NA&gt;          24797 75138  Star ~ Episode V  2018
+##  8 Bryanna    Welsh         19 &lt;NA&gt;          24701 76062  DC Co~ Mighty M~  2018
+##  9 Caleb      Garcia-Wi~    37 907-555-9236  24730 41115  Frien~ &lt;NA&gt;       2018
+## 10 Caleb      Garcia-Wi~    37 907-555-9236  25611 21127  Minec~ Minifig-~  2018
+## # ... with 610 more rows, and 5 more variables: name &lt;chr&gt;, pieces &lt;dbl&gt;,
+## #   us_price &lt;dbl&gt;, image_url &lt;chr&gt;, quantity &lt;dbl&gt;</code></pre>
+<pre class="r"><code>lego_sales %&gt;%
+  filter(theme == &quot;Star Wars&quot;) %&gt;%
+  count(subtheme, sort = TRUE)</code></pre>
+<pre><code>## # A tibble: 11 x 2
+##    subtheme                      n
+##    &lt;chr&gt;                     &lt;int&gt;
+##  1 The Force Awakens            15
+##  2 Buildable Figures            11
+##  3 Episode V                    10
+##  4 MicroFighters                10
+##  5 Battlefront                   7
+##  6 Original Content              7
+##  7 Episode III                   6
+##  8 Rebels                        3
+##  9 Seasonal                      3
+## 10 Episode IV                    2
+## 11 Ultimate Collector Series     1</code></pre>
+<pre class="r"><code>library(tidyverse)
+read_csv(&quot;lego_sales.csv&quot;)</code></pre>
+<pre><code>## 
+## -- Column specification --------------------------------------------------------
+## cols(
+##   first_name = col_character(),
+##   last_name = col_character(),
+##   age = col_double(),
+##   phone_number = col_character(),
+##   set_id = col_double(),
+##   number = col_character(),
+##   theme = col_character(),
+##   subtheme = col_character(),
+##   year = col_double(),
+##   name = col_character(),
+##   pieces = col_double(),
+##   us_price = col_double(),
+##   image_url = col_character(),
+##   quantity = col_double()
+## )</code></pre>
+<pre><code>## # A tibble: 620 x 14
+##    first_name last_name    age phone_number set_id number theme  subtheme   year
+##    &lt;chr&gt;      &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;     &lt;dbl&gt;
+##  1 Kimberly   Beckstead     24 216-555-2549  24701 76062  DC Co~ Mighty M~  2018
+##  2 Neel       Garvin        35 819-555-3189  25626 70595  Ninja~ Rise of ~  2018
+##  3 Neel       Garvin        35 819-555-3189  24665 21031  Archi~ &lt;NA&gt;       2018
+##  4 Chelsea    Bouchard      41 &lt;NA&gt;          24695 31048  Creat~ &lt;NA&gt;       2018
+##  5 Chelsea    Bouchard      41 &lt;NA&gt;          25626 70595  Ninja~ Rise of ~  2018
+##  6 Chelsea    Bouchard      41 &lt;NA&gt;          24721 10831  Duplo  &lt;NA&gt;       2018
+##  7 Bryanna    Welsh         19 &lt;NA&gt;          24797 75138  Star ~ Episode V  2018
+##  8 Bryanna    Welsh         19 &lt;NA&gt;          24701 76062  DC Co~ Mighty M~  2018
+##  9 Caleb      Garcia-Wi~    37 907-555-9236  24730 41115  Frien~ &lt;NA&gt;       2018
+## 10 Caleb      Garcia-Wi~    37 907-555-9236  25611 21127  Minec~ Minifig-~  2018
+## # ... with 610 more rows, and 5 more variables: name &lt;chr&gt;, pieces &lt;dbl&gt;,
+## #   us_price &lt;dbl&gt;, image_url &lt;chr&gt;, quantity &lt;dbl&gt;</code></pre>
+<pre class="r"><code>lego_sales %&gt;%
+  filter(theme == &quot;Gear&quot;) %&gt;%
+  count(subtheme, sort = TRUE)</code></pre>
+<pre><code>## # A tibble: 14 x 2
+##    subtheme                     n
+##    &lt;chr&gt;                    &lt;int&gt;
+##  1 Role-Play toys               7
+##  2 Stationery                   7
+##  3 Key Chains/Friends           6
+##  4 Key Chains/Miscellaneous     6
+##  5 Key Chains/Ninjago           5
+##  6 Video Games/PS3              5
+##  7 Watches/Clocks               4
+##  8 Key Chains/City              3
+##  9 Video Games/Wii U            3
+## 10 Digital Media                2
+## 11 Playmats                     2
+## 12 Video Games/3DS              2
+## 13 Video Games/XBOX 360         2
+## 14 Digital media                1</code></pre>
+<pre class="r"><code>library(tidyverse)
+read_csv(&quot;lego_sales.csv&quot;)</code></pre>
+<pre><code>## 
+## -- Column specification --------------------------------------------------------
+## cols(
+##   first_name = col_character(),
+##   last_name = col_character(),
+##   age = col_double(),
+##   phone_number = col_character(),
+##   set_id = col_double(),
+##   number = col_character(),
+##   theme = col_character(),
+##   subtheme = col_character(),
+##   year = col_double(),
+##   name = col_character(),
+##   pieces = col_double(),
+##   us_price = col_double(),
+##   image_url = col_character(),
+##   quantity = col_double()
+## )</code></pre>
+<pre><code>## # A tibble: 620 x 14
+##    first_name last_name    age phone_number set_id number theme  subtheme   year
+##    &lt;chr&gt;      &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;     &lt;dbl&gt;
+##  1 Kimberly   Beckstead     24 216-555-2549  24701 76062  DC Co~ Mighty M~  2018
+##  2 Neel       Garvin        35 819-555-3189  25626 70595  Ninja~ Rise of ~  2018
+##  3 Neel       Garvin        35 819-555-3189  24665 21031  Archi~ &lt;NA&gt;       2018
+##  4 Chelsea    Bouchard      41 &lt;NA&gt;          24695 31048  Creat~ &lt;NA&gt;       2018
+##  5 Chelsea    Bouchard      41 &lt;NA&gt;          25626 70595  Ninja~ Rise of ~  2018
+##  6 Chelsea    Bouchard      41 &lt;NA&gt;          24721 10831  Duplo  &lt;NA&gt;       2018
+##  7 Bryanna    Welsh         19 &lt;NA&gt;          24797 75138  Star ~ Episode V  2018
+##  8 Bryanna    Welsh         19 &lt;NA&gt;          24701 76062  DC Co~ Mighty M~  2018
+##  9 Caleb      Garcia-Wi~    37 907-555-9236  24730 41115  Frien~ &lt;NA&gt;       2018
+## 10 Caleb      Garcia-Wi~    37 907-555-9236  25611 21127  Minec~ Minifig-~  2018
+## # ... with 610 more rows, and 5 more variables: name &lt;chr&gt;, pieces &lt;dbl&gt;,
+## #   us_price &lt;dbl&gt;, image_url &lt;chr&gt;, quantity &lt;dbl&gt;</code></pre>
+<pre class="r"><code>lego_sales %&gt;%
+  filter(theme == &quot;Mixels&quot;) %&gt;%
+  count(subtheme, sort = TRUE)</code></pre>
+<pre><code>## # A tibble: 3 x 2
+##   subtheme     n
+##   &lt;chr&gt;    &lt;int&gt;
+## 1 Series 9    21
+## 2 Series 7    18
+## 3 Series 8    16</code></pre>
+</div>
+<div id="create-a-new-variable-called-age_group-and-group-the-ages-into-the-following-categories-18-and-under-19---25-26---35-36---50-51-and-over." class="section level2">
+<h2>Create a new variable called age_group and group the ages into the following categories: “18 and under”, “19 - 25”, “26 - 35”, “36 - 50”, “51 and over”.</h2>
+<pre class="r"><code>lego_sales &lt;- lego_sales %&gt;%
+  mutate(age_group = case_when(age &lt;= 18 ~ &quot;18 and under&quot;, age &gt;= 19 &amp; age &lt;= 25 ~ &quot;19 - 25&quot;, age &gt;= 26 &amp; age &lt;= 35 ~ &quot;26 - 35&quot;, age &gt;= 36 &amp; age &lt;= 50 ~ &quot;36 - 50&quot;, age &gt;= 51 ~ &quot;51 and over&quot; ))</code></pre>
+</div>
+<div id="the-probability-of-a-randomly-selected-customer-in-the-19-25-age-group-is-20.8" class="section level2">
+<h2>The probability of a randomly selected customer in the 19-25 age group is 20.8%</h2>
+<pre class="r"><code>lego_sales %&gt;%
+  count(age_group, sort = TRUE) </code></pre>
+<pre><code>## # A tibble: 5 x 2
+##   age_group        n
+##   &lt;chr&gt;        &lt;int&gt;
+## 1 36 - 50        216
+## 2 26 - 35        183
+## 3 19 - 25        129
+## 4 51 and over     62
+## 5 18 and under    30</code></pre>
+</div>
+<div id="the-probability-a-randomly-selected-customer-is-in-the-19-26-age-group-and-purchased-a-duplo-theme-set-is-9129" class="section level2">
+<h2>The probability a randomly selected customer is in the 19-26 age group and purchased a Duplo theme set is 9/129</h2>
+<pre class="r"><code>lego_sales %&gt;%
+  filter(age_group == &quot;19 - 25&quot;) %&gt;%
+  count(theme == &quot;Duplo&quot;, sort = TRUE) </code></pre>
+<pre><code>## # A tibble: 2 x 2
+##   `theme == &quot;Duplo&quot;`     n
+##   &lt;lgl&gt;              &lt;int&gt;
+## 1 FALSE                120
+## 2 TRUE                   9</code></pre>
+</div>
+<div id="the-probability-a-randomly-selected-customer-is-in-the-19-26-age-group-given-purchased-a-duplo-theme-set-is-935" class="section level2">
+<h2>The probability a randomly selected customer is in the 19-26 age group given purchased a Duplo theme set is 9/35</h2>
+<pre class="r"><code>lego_sales %&gt;%
+  filter(theme == &quot;Duplo&quot;) %&gt;%
+  count(age_group == &quot;19 - 25&quot;, sort = TRUE)</code></pre>
+<pre><code>## # A tibble: 2 x 2
+##   `age_group == &quot;19 - 25&quot;`     n
+##   &lt;lgl&gt;                    &lt;int&gt;
+## 1 FALSE                       26
+## 2 TRUE                         9</code></pre>
+</div>
+<div id="which-age-group-has-purchased-the-largest-number-of-lego-sets-how-many-did-they-purchase" class="section level2">
+<h2>Which age group has purchased the largest number of lego sets? How many did they purchase?</h2>
+<pre class="r"><code>lego_sales %&gt;% 
+  group_by(age_group) %&gt;% 
+  summarise(total_number = sum(quantity) ) %&gt;%
+  arrange(desc(total_number))</code></pre>
+<pre><code>## # A tibble: 5 x 2
+##   age_group    total_number
+##   &lt;chr&gt;               &lt;dbl&gt;
+## 1 36 - 50               313
+## 2 26 - 35               267
+## 3 19 - 25               174
+## 4 51 and over            92
+## 5 18 and under           45</code></pre>
+<ul>
+<li>It can be seen that 36-50 age group has purchased the most lego sets (313)</li>
+</ul>
+</div>
+<div id="which-age-group-has-spent-the-most-money-on-legos-how-much-did-they-spend" class="section level2">
+<h2>Which age group has spent the most money on legos? How much did they spend?</h2>
+<pre class="r"><code>lego_sales %&gt;%
+  mutate(money_spent = us_price * quantity
+  ) %&gt;%
+  group_by(age_group) %&gt;%
+  summarise(total_spent = sum(money_spent)
+  ) %&gt;%
+  arrange(desc(total_spent))</code></pre>
+<pre><code>## # A tibble: 5 x 2
+##   age_group    total_spent
+##   &lt;chr&gt;              &lt;dbl&gt;
+## 1 36 - 50            9533.
+## 2 26 - 35            7576.
+## 3 19 - 25            4939.
+## 4 51 and over        2475.
+## 5 18 and under        949.</code></pre>
+<ul>
+<li>The outcome is that age group of 36-50 has spent the most on lego sets with amount $9532.87.</li>
+</ul>
+</div>
+<div id="my-question-would-be-which-theme-has-made-up-the-most-revenue-in-2018" class="section level2">
+<h2>My question would be: “Which theme has made up the most revenue in 2018?”</h2>
+<pre class="r"><code>lego_sales %&gt;%
+  mutate(money_spent = us_price * quantity
+  ) %&gt;%
+  group_by(theme) %&gt;%
+  summarise(total_spent = sum(money_spent)
+  ) %&gt;%
+  arrange(desc(total_spent)) </code></pre>
+<pre><code>## # A tibble: 25 x 2
+##    theme        total_spent
+##    &lt;chr&gt;              &lt;dbl&gt;
+##  1 Star Wars          4448.
+##  2 Ninjago            2279.
+##  3 City               2211.
+##  4 Nexo Knights       2209.
+##  5 Minecraft          1550.
+##  6 Gear               1533.
+##  7 Friends            1279.
+##  8 Duplo              1220.
+##  9 Elves              1120.
+## 10 Ghostbusters        880.
+## # ... with 15 more rows</code></pre>
+<ul>
+<li>Of course, the answer is “Star Wars”.</li>
+</ul>
+</div>
+<div id="visualization-of-the-above-result" class="section level2">
+<h2>Visualization of the above result</h2>
+<pre class="r"><code>library(tidyverse)
+lego_sales %&gt;%
+  mutate(money_spent = us_price * quantity
+  ) %&gt;%
+  group_by(theme)%&gt;%
+ summarize(total_spent = sum(money_spent)) %&gt;%
+  ggplot(aes(x = total_spent, y = theme, color = theme)) +
+  geom_point() +
+  coord_polar(theta = &quot;x&quot;)</code></pre>
+<p><img src="/post/2021-06-05-assignment-03/Assignment%2003_Xiao%20Ji_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+</div>
+<div id="change-above-visualization" class="section level2">
+<h2>Change above visualization</h2>
+<pre class="r"><code>library(tidyverse)
+lego_sales %&gt;%
+  mutate(money_spent = us_price * quantity
+  ) %&gt;%
+  group_by(theme)%&gt;%
+ summarize(total_spent = sum(money_spent)) %&gt;%
+  ggplot(aes(x = total_spent, y = theme, color = total_spent)) + 
+  geom_point()</code></pre>
+<p><img src="/post/2021-06-05-assignment-03/Assignment%2003_Xiao%20Ji_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<ul>
+<li>I add this annotation to identify I have changed the color of the above result.</li>
+</ul>
+</div>

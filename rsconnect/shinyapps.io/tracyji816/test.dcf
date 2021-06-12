@@ -1,0 +1,13 @@
+name: test
+title: test
+username:
+account: tracyji816
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4243450
+bundleId: 4692293
+url: https://tracyji816.shinyapps.io/test/
+when: 1623160365.48226
+lastSyncTime: 1623160365.48226
+asMultiple: FALSE
+asStatic: FALSE

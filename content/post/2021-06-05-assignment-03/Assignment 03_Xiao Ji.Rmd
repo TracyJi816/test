@@ -11,7 +11,7 @@ tags: []
 ## Import lego_sales.csv and find the most three common first names in customers are :Jackson	13, Jacob	11 and Joseph	11	
 ```{r}
 library(tidyverse)
-read_csv("lego_sales.csv")
+lego_sales <- read_csv("lego_sales.csv")
 lego_sales %>%
   mutate(first_name = fct_infreq(first_name)) %>%
   count(first_name)
@@ -128,6 +128,7 @@ lego_sales %>%
   geom_point() +
   coord_polar(theta = "x")
 ```
+
 ## Change above visualization
 ```{r}
 library(tidyverse)
@@ -140,6 +141,6 @@ lego_sales %>%
   geom_point()
 ```
 
-* I add this annotation to identify I have changed the color of the above result
+* I add this annotation to identify I have changed the color of the above result.
 
 

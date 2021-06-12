@@ -1,0 +1,14 @@
+name: test
+title: test
+username:
+account: tracyji816
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4243450
+bundleId: 4692318
+url: https://tracyji816.shinyapps.io/test/
+when: 1623160718.44737
+lastSyncTime: 1623160718.44737
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: .RData|.Rprofile|config.yaml|index.Rmd|layouts/shortcodes/blogdown/postref.html|netlify.toml|R/build.R|R/build2.R|content|public|static|themes
