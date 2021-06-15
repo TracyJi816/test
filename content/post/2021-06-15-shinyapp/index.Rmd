@@ -1,0 +1,13 @@
+---
+title: shinyapp
+author: ''
+date: '2021-06-15'
+slug: shinyapp
+categories:
+  - shiny
+tags: []
+---
+## NASA Fireballs Velocity Analysis
+This interactive visualization presents the Velocity spread of fireballs observed by NASA.
+
+<iframe src="https://tracyji816.shinyapps.io/assignment4/" height= "400" width= "50%" frameborder= "no"></iframe>
