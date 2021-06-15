@@ -1,0 +1,16 @@
+---
+title: Assignment04
+author: Xiao Ji
+date: '2021-06-12'
+slug: assignment04
+categories:
+  - shiny
+tags: []
+runtime: shiny
+output: html_document
+---
+
+## NASA Fireballs Velocity Analysis
+This interactive visualization presents the Velocity spread of fireballs observed by NASA.
+
+<iframe src="https://tracyji816.shinyapps.io/assignment4/" frameborder= "no"></iframe>

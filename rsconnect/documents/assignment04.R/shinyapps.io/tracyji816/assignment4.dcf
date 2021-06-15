@@ -1,0 +1,14 @@
+name: assignment4
+title: assignment4
+username:
+account: tracyji816
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4264008
+bundleId: 4709974
+url: https://tracyji816.shinyapps.io/assignment4/
+when: 1623553575.42395
+lastSyncTime: 1623553575.42395
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: .RData|.Rprofile|API_SI.POV.DDAY_DS2_en_csv_v2_2446152.csv|config.yaml|covid-speeches-words.rds|index.Rmd|layouts/shortcodes/blogdown/postref.html|netlify.toml|R/build.R|R/build2.R|shinypractice.R|content|public|static|themes
