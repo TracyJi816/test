@@ -12,17 +12,56 @@ library(GGally)
 library(tidymodels)
 ```
 
-## Load Data
+Dataset: Diamonds
+Desciption
+* This dataset contains pricesc and other 9 attributes of more than 53,000 dimmonds. The variables are as follows:
 ```{r}
 data("diamonds")
+str("diamonds")
 glimpse(diamonds)
 ```
 
-* Notes: using log scale for price
+Calculate the average/standard deviation/median pvalue of these diamonds
+```{r}
+diamonds %>% 
+  mutate(m = mean(price),     # calculates the mean price
+         sd = sd(price),      # calculates standard deviation
+         med = median(price)) # calculates the median price
+
+diamonds %>% 
+  summarize(avg.price = mean(price),     # average price of all diamonds
+            dbl.price = mean(price) * 2, # calculating double the average price
+            random.add = 1 + 2,          # a math operation without an existing variable 
+            avg.carat = mean(carat),     # average carat size of all diamonds
+            stdev.price = sd(price)) 
+```
+firstly, we want to know the distribution for all diamonds.
+```{r}
+diamonds %>% 
+  ggplot(aes(x = price, group = cut, fill = cut)) +
+  geom_histogram(binwidth = 10)
+```
+Then, we might want to see how the quality of the cut, or the color, or the clarity, affects the price.
+```{r}
+ggplot(diamonds, aes(x=carat, y=price, color=clarity)) + geom_point()
+```
+
+Thirdly, we could also improve the data representation by altering the transparency of the data points. What this does is showing us where the majority of the data points sit:The more data points that sit in a particular location (the darker the area), the more observations there are.
+
+* Note:lower alpha values increase transparency of points
+```{r}
+diamonds %>% 
+  ggplot(aes(x = depth, y = price)) +
+  geom_point(alpha = 0.1) 
+
+```
+
+From the above plot, it is easy to find that most diamonds have the depth ranging from 55-65mm.
+
 
 ## Create two histograms of the price variable and place them side by side on one output image.
 
-## The first plot should be a histogram of price and the second plot should transform the price variable using log10.
+* Note:The first plot is a histogram of price and the second plot has transformed the price variable using log10.
 
 ```{r}
 library(gridExtra)
@@ -59,5 +98,9 @@ ggplot(aes(x=carat,y=price))+
   theme_bw()
 ```
 
-
+However, if we would rather show a best fit straight line rather than a curve, we can change the option in the geom_smooth layer.
+```{r}
+ggplot(diamonds, aes(x=carat, y=price)) + geom_point() + geom_smooth(se=FALSE, method="lm")
+```
+* Note: Above is the best fit line to the relationship between carat and price.
 

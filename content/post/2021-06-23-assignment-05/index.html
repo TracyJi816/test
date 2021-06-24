@@ -34,10 +34,13 @@ tags: []
 ## x dplyr::lag()     masks stats::lag()
 ## x recipes::step()  masks stats::step()
 ## * Use tidymodels_prefer() to resolve common conflicts.</code></pre>
-<div id="load-data" class="section level2">
-<h2>Load Data</h2>
+<p>Dataset: Diamonds
+Desciption
+* This dataset contains pricesc and other 9 attributes of more than 53,000 dimmonds. The variables are as follows:</p>
 <pre class="r"><code>data(&quot;diamonds&quot;)
-glimpse(diamonds)</code></pre>
+str(&quot;diamonds&quot;)</code></pre>
+<pre><code>##  chr &quot;diamonds&quot;</code></pre>
+<pre class="r"><code>glimpse(diamonds)</code></pre>
 <pre><code>## Rows: 53,940
 ## Columns: 10
 ## $ carat   &lt;dbl&gt; 0.23, 0.21, 0.23, 0.29, 0.31, 0.24, 0.24, 0.26, 0.22, 0.23, 0.~
@@ -50,15 +53,57 @@ glimpse(diamonds)</code></pre>
 ## $ x       &lt;dbl&gt; 3.95, 3.89, 4.05, 4.20, 4.34, 3.94, 3.95, 4.07, 3.87, 4.00, 4.~
 ## $ y       &lt;dbl&gt; 3.98, 3.84, 4.07, 4.23, 4.35, 3.96, 3.98, 4.11, 3.78, 4.05, 4.~
 ## $ z       &lt;dbl&gt; 2.43, 2.31, 2.31, 2.63, 2.75, 2.48, 2.47, 2.53, 2.49, 2.39, 2.~</code></pre>
+<p>Calculate the average/standard deviation/median pvalue of these diamonds</p>
+<pre class="r"><code>diamonds %&gt;% 
+  mutate(m = mean(price),     # calculates the mean price
+         sd = sd(price),      # calculates standard deviation
+         med = median(price)) # calculates the median price</code></pre>
+<pre><code>## # A tibble: 53,940 x 13
+##    carat cut       color clarity depth table price     x     y     z     m    sd
+##    &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1  0.23 Ideal     E     SI2      61.5    55   326  3.95  3.98  2.43 3933. 3989.
+##  2  0.21 Premium   E     SI1      59.8    61   326  3.89  3.84  2.31 3933. 3989.
+##  3  0.23 Good      E     VS1      56.9    65   327  4.05  4.07  2.31 3933. 3989.
+##  4  0.29 Premium   I     VS2      62.4    58   334  4.2   4.23  2.63 3933. 3989.
+##  5  0.31 Good      J     SI2      63.3    58   335  4.34  4.35  2.75 3933. 3989.
+##  6  0.24 Very Good J     VVS2     62.8    57   336  3.94  3.96  2.48 3933. 3989.
+##  7  0.24 Very Good I     VVS1     62.3    57   336  3.95  3.98  2.47 3933. 3989.
+##  8  0.26 Very Good H     SI1      61.9    55   337  4.07  4.11  2.53 3933. 3989.
+##  9  0.22 Fair      E     VS2      65.1    61   337  3.87  3.78  2.49 3933. 3989.
+## 10  0.23 Very Good H     VS1      59.4    61   338  4     4.05  2.39 3933. 3989.
+## # ... with 53,930 more rows, and 1 more variable: med &lt;dbl&gt;</code></pre>
+<pre class="r"><code>diamonds %&gt;% 
+  summarize(avg.price = mean(price),     # average price of all diamonds
+            dbl.price = mean(price) * 2, # calculating double the average price
+            random.add = 1 + 2,          # a math operation without an existing variable 
+            avg.carat = mean(carat),     # average carat size of all diamonds
+            stdev.price = sd(price)) </code></pre>
+<pre><code>## # A tibble: 1 x 5
+##   avg.price dbl.price random.add avg.carat stdev.price
+##       &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
+## 1     3933.     7866.          3     0.798       3989.</code></pre>
+<p>firstly, we want to know the distribution for all diamonds.</p>
+<pre class="r"><code>diamonds %&gt;% 
+  ggplot(aes(x = price, group = cut, fill = cut)) +
+  geom_histogram(binwidth = 10)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-4-1.png" width="672" />
+Then, we might want to see how the quality of the cut, or the color, or the clarity, affects the price.</p>
+<pre class="r"><code>ggplot(diamonds, aes(x=carat, y=price, color=clarity)) + geom_point()</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>Thirdly, we could also improve the data representation by altering the transparency of the data points. What this does is showing us where the majority of the data points sit:The more data points that sit in a particular location (the darker the area), the more observations there are.</p>
 <ul>
-<li>Notes: using log scale for price</li>
+<li>Note:lower alpha values increase transparency of points</li>
 </ul>
-</div>
+<pre class="r"><code>diamonds %&gt;% 
+  ggplot(aes(x = depth, y = price)) +
+  geom_point(alpha = 0.1) </code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>From the above plot, it is easy to find that most diamonds have the depth ranging from 55-65mm.</p>
 <div id="create-two-histograms-of-the-price-variable-and-place-them-side-by-side-on-one-output-image." class="section level2">
 <h2>Create two histograms of the price variable and place them side by side on one output image.</h2>
-</div>
-<div id="the-first-plot-should-be-a-histogram-of-price-and-the-second-plot-should-transform-the-price-variable-using-log10." class="section level2">
-<h2>The first plot should be a histogram of price and the second plot should transform the price variable using log10.</h2>
+<ul>
+<li>Note:The first plot is a histogram of price and the second plot has transformed the price variable using log10.</li>
+</ul>
 <pre class="r"><code>library(gridExtra)</code></pre>
 <pre><code>## 
 ## Attaching package: &#39;gridExtra&#39;</code></pre>
@@ -74,13 +119,13 @@ p2 = ggplot(diamonds,(aes(x = log10(price))))+
   ggtitle(&#39;log Price&#39;)
 
 grid.arrange(p1,p2,ncol = 2)</code></pre>
-<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-3-1.png" width="672" />
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-7-1.png" width="672" />
 ## Create Correlation Matrix among variables.</p>
 <pre class="r"><code>diamonds %&gt;%
     mutate_if(is.factor,as.numeric) %&gt;%
    select(price,everything()) %&gt;%
     ggcorr(method = c(&quot;everything&quot;, &quot;pearson&quot;),label = T)</code></pre>
-<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <p>From the matrix above, we found there are some highly-related variables.</p>
 <p>Thus, we could predict that there may be non-linear relationship between carat with price from the chart below.</p>
 <pre class="r"><code>diamonds %&gt;%
@@ -89,5 +134,10 @@ ggplot(aes(x=carat,y=price))+
   geom_point()+
   geom_smooth(method=&quot;lm&quot;,formula=&quot;y~poly(x,4)&quot;)+
   theme_bw()</code></pre>
-<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>However, if we would rather show a best fit straight line rather than a curve, we can change the option in the geom_smooth layer.</p>
+<pre class="r"><code>ggplot(diamonds, aes(x=carat, y=price)) + geom_point() + geom_smooth(se=FALSE, method=&quot;lm&quot;)</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-10-1.png" width="672" />
+* Note: Above is the best fit line to the relationship between carat and price.</p>
 </div>
