@@ -1,0 +1,63 @@
+---
+title: assignment 05
+author: Xiao Ji
+date: '2021-06-23'
+slug: assignment-05
+categories: []
+tags: []
+---
+
+```{r}
+library(GGally)
+library(tidymodels)
+```
+
+## Load Data
+```{r}
+data("diamonds")
+glimpse(diamonds)
+```
+
+* Notes: using log scale for price
+
+## Create two histograms of the price variable and place them side by side on one output image.
+
+## The first plot should be a histogram of price and the second plot should transform the price variable using log10.
+
+```{r}
+library(gridExtra)
+
+p1 <- ggplot(diamonds,(aes(x = price)))+
+  geom_histogram(binwidth = 100, fill = I('#099DD9'))+
+  ggtitle('Diamond prices')
+
+p2 = ggplot(diamonds,(aes(x = log10(price))))+
+  geom_histogram(binwidth = 0.05, fill = I('#F79420'))+
+  ggtitle('log Price')
+
+grid.arrange(p1,p2,ncol = 2)
+```
+## Create Correlation Matrix among variables.
+```{r}
+diamonds %>%
+    mutate_if(is.factor,as.numeric) %>%
+   select(price,everything()) %>%
+    ggcorr(method = c("everything", "pearson"),label = T)
+```
+
+
+
+From the matrix above, we found there are some highly-related variables. 
+
+Thus, we could predict that there may be non-linear relationship between carat with price from the chart below.
+```{r}
+diamonds %>%
+ggplot(aes(x=carat,y=price))+
+  scale_y_continuous(trans=log_trans(),labels=function(x) round(x,-2))+
+  geom_point()+
+  geom_smooth(method="lm",formula="y~poly(x,4)")+
+  theme_bw()
+```
+
+
+

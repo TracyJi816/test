@@ -13,4 +13,4 @@ RnwWeave: Sweave
 LaTeX: pdfLaTeX
 
 BuildType: Website
-WebsitePath: https://github.com/TracyJi816/testC:\Users\NANA_tracy\Documents\GitHub\test\content\post
+WebsitePath: content/post/2021-06-23-assignment-05

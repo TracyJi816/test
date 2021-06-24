@@ -1,0 +1,53 @@
+---
+title: Final Project
+author: Xiao Ji
+date: '2021-06-23'
+slug: final-project
+categories:
+  - ggplot2
+  - tidyverse
+  - tidymodels
+tags: []
+---
+
+<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
+
+
+<div id="load-packages" class="section level2">
+<h2>Load Packages</h2>
+</div>
+<div id="import-datacrime" class="section level2">
+<h2>Import <a href="Data:Crime" class="uri">Data:Crime</a></h2>
+<pre class="r"><code>pp &lt;- read_csv(&quot;crime.csv&quot;, na = c(&quot;n/a&quot;, &quot;&quot;, &quot;NA&quot;))</code></pre>
+<pre><code>## 
+## -- Column specification --------------------------------------------------------
+## cols(
+##   .default = col_double(),
+##   `Case Number` = col_character(),
+##   Date = col_character(),
+##   Block = col_character(),
+##   IUCR = col_character(),
+##   `Primary Type` = col_character(),
+##   Description = col_character(),
+##   `Location Description` = col_character(),
+##   Arrest = col_logical(),
+##   Domestic = col_logical(),
+##   `FBI Code` = col_character(),
+##   `Updated On` = col_character(),
+##   Location = col_character()
+## )
+## i Use `spec()` for the full column specifications.</code></pre>
+</div>
+<div id="number-of-obervations-1200-number-of-variables30" class="section level2">
+<h2>Number of obervations: 1200 Number of variables:30</h2>
+<pre class="r"><code>nrow(pp)</code></pre>
+<pre><code>## [1] 1200</code></pre>
+<pre class="r"><code>ncol(pp)</code></pre>
+<pre><code>## [1] 30</code></pre>
+</div>
+<div id="goal-predict-case-number-from-location" class="section level2">
+<h2>Goal: Predict case number from location</h2>
+<p><span class="math display">\[\widehat{Type}_{i} = \beta_0 + \beta_1 \times Location_{i}\]</span></p>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/number-location-plot-1.png" width="672" /></p>
+</div>

@@ -35,6 +35,7 @@ ncol(pp)
 $$\widehat{height}_{i} = \beta_0 + \beta_1 \times width_{i}$$
 
 ```{r height-width-plot, echo=FALSE, warning=FALSE}
+library(ggplot2)
 ggplot(data = pp, aes(x = Width_in, y = Height_in)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE, color = "#8E2C90") + 
