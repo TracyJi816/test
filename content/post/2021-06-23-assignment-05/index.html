@@ -53,7 +53,8 @@ str(&quot;diamonds&quot;)</code></pre>
 ## $ x       &lt;dbl&gt; 3.95, 3.89, 4.05, 4.20, 4.34, 3.94, 3.95, 4.07, 3.87, 4.00, 4.~
 ## $ y       &lt;dbl&gt; 3.98, 3.84, 4.07, 4.23, 4.35, 3.96, 3.98, 4.11, 3.78, 4.05, 4.~
 ## $ z       &lt;dbl&gt; 2.43, 2.31, 2.31, 2.63, 2.75, 2.48, 2.47, 2.53, 2.49, 2.39, 2.~</code></pre>
-<p>Calculate the average/standard deviation/median pvalue of these diamonds</p>
+<p>Discoveries &amp; Insights</p>
+<p>First, we want to know the average/standard deviation/median pvalue of these diamonds</p>
 <pre class="r"><code>diamonds %&gt;% 
   mutate(m = mean(price),     # calculates the mean price
          sd = sd(price),      # calculates standard deviation
@@ -82,15 +83,15 @@ str(&quot;diamonds&quot;)</code></pre>
 ##   avg.price dbl.price random.add avg.carat stdev.price
 ##       &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
 ## 1     3933.     7866.          3     0.798       3989.</code></pre>
-<p>firstly, we want to know the distribution for all diamonds.</p>
+<p>Secondly, we want to know the distribution for all diamonds.</p>
 <pre class="r"><code>diamonds %&gt;% 
   ggplot(aes(x = price, group = cut, fill = cut)) +
   geom_histogram(binwidth = 10)</code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-4-1.png" width="672" />
-Then, we might want to see how the quality of the cut, or the color, or the clarity, affects the price.</p>
+Thirdly, we might want to see how the quality of the cut, or the color, or the clarity, affects the price.</p>
 <pre class="r"><code>ggplot(diamonds, aes(x=carat, y=price, color=clarity)) + geom_point()</code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<p>Thirdly, we could also improve the data representation by altering the transparency of the data points. What this does is showing us where the majority of the data points sit:The more data points that sit in a particular location (the darker the area), the more observations there are.</p>
+<p>Then, we could also improve the data representation by altering the transparency of the data points. What this does is showing us where the majority of the data points sit:The more data points that sit in a particular location (the darker the area), the more observations there are.</p>
 <ul>
 <li>Note:lower alpha values increase transparency of points</li>
 </ul>
@@ -98,7 +99,9 @@ Then, we might want to see how the quality of the cut, or the color, or the clar
   ggplot(aes(x = depth, y = price)) +
   geom_point(alpha = 0.1) </code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
-<p>From the above plot, it is easy to find that most diamonds have the depth ranging from 55-65mm.</p>
+<ul>
+<li>Conclusion:from the plot above, we could find most diamonds have the depth ranging from 55-65mm.</li>
+</ul>
 <div id="create-two-histograms-of-the-price-variable-and-place-them-side-by-side-on-one-output-image." class="section level2">
 <h2>Create two histograms of the price variable and place them side by side on one output image.</h2>
 <ul>
@@ -126,7 +129,9 @@ grid.arrange(p1,p2,ncol = 2)</code></pre>
    select(price,everything()) %&gt;%
     ggcorr(method = c(&quot;everything&quot;, &quot;pearson&quot;),label = T)</code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
-<p>From the matrix above, we found there are some highly-related variables.</p>
+<ul>
+<li>Conclusion:From the matrix above, we find there are some highly-related variables.</li>
+</ul>
 <p>Thus, we could predict that there may be non-linear relationship between carat with price from the chart below.</p>
 <pre class="r"><code>diamonds %&gt;%
 ggplot(aes(x=carat,y=price))+

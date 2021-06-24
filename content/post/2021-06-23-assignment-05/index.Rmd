@@ -21,7 +21,9 @@ str("diamonds")
 glimpse(diamonds)
 ```
 
-Calculate the average/standard deviation/median pvalue of these diamonds
+Discoveries & Insights
+
+First, we want to know the average/standard deviation/median pvalue of these diamonds
 ```{r}
 diamonds %>% 
   mutate(m = mean(price),     # calculates the mean price
@@ -35,18 +37,18 @@ diamonds %>%
             avg.carat = mean(carat),     # average carat size of all diamonds
             stdev.price = sd(price)) 
 ```
-firstly, we want to know the distribution for all diamonds.
+Secondly, we want to know the distribution for all diamonds.
 ```{r}
 diamonds %>% 
   ggplot(aes(x = price, group = cut, fill = cut)) +
   geom_histogram(binwidth = 10)
 ```
-Then, we might want to see how the quality of the cut, or the color, or the clarity, affects the price.
+Thirdly, we might want to see how the quality of the cut, or the color, or the clarity, affects the price.
 ```{r}
 ggplot(diamonds, aes(x=carat, y=price, color=clarity)) + geom_point()
 ```
 
-Thirdly, we could also improve the data representation by altering the transparency of the data points. What this does is showing us where the majority of the data points sit:The more data points that sit in a particular location (the darker the area), the more observations there are.
+Then, we could also improve the data representation by altering the transparency of the data points. What this does is showing us where the majority of the data points sit:The more data points that sit in a particular location (the darker the area), the more observations there are.
 
 * Note:lower alpha values increase transparency of points
 ```{r}
@@ -56,7 +58,7 @@ diamonds %>%
 
 ```
 
-From the above plot, it is easy to find that most diamonds have the depth ranging from 55-65mm.
+* Conclusion:from the plot above, we could find most diamonds have the depth ranging from 55-65mm.
 
 
 ## Create two histograms of the price variable and place them side by side on one output image.
@@ -86,7 +88,7 @@ diamonds %>%
 
 
 
-From the matrix above, we found there are some highly-related variables. 
+* Conclusion:From the matrix above, we find there are some highly-related variables. 
 
 Thus, we could predict that there may be non-linear relationship between carat with price from the chart below.
 ```{r}
