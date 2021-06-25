@@ -1,0 +1,122 @@
+---
+title: Final Project
+author: Xiao Ji
+date: '2021-06-24'
+slug: final-project
+categories:
+  - ggplot2
+  - tidyverse
+  - tidymodels
+tags: []
+---
+
+Boston Housing Data Analysis
+(prepare needed packages)
+```{r warning=FALSE, error=FALSE}
+library(readr)
+library(ggplot2)
+library(corrplot)
+library(mlbench)
+library(Amelia)
+library(plotly)
+library(reshape2)
+library(caret)
+library(caTools)
+library(dplyr)
+```
+
+1. Firstly,  we need load the Dataset(Bostonhouse) and clean it. 
+```{r}
+data(BostonHousing)
+housing <- BostonHousing
+str(housing)
+summary(housing)
+anyNA(BostonHousing)
+```
+
+* Conclusion: Through summary above, we could see this dataset contains 506 census tracts of Boston from the 1970 census; and the data is free from NA's.
+
+2. Secondly, we could use ggplot to explore the date.
+ e.g., we could use correlatioin plot to check data and see if there are any interaction random variables.
+```{r}
+corrplot(cor(select(housing,-chas)))
+```
+
+* Conclusion: From the plot above, it is clearly that medv has highly negative correlation with indus ptratio,and lstat; while it has highly positive correlation with rm.
+
+Thus, we could pay more attention on the varaible medv(which represents median value of owner-occupied homes in $1000s). We could visualize the distribution of medv by using ggplot.
+```{r}
+housing %>% 
+  ggplot(aes(medv)) +
+  stat_density() + 
+  theme_bw()
+```
+
+* Conlusion: The above visualizations reveal that peak densities of medv are in between 15 and 30.
+
+3. Let’s see the effect of the variables in the dataframe on medv.
+```{r warning=FALSE, error=FALSE}
+housing %>%
+  select(c(crim, rm, age, rad, tax, lstat, medv,indus,nox,ptratio,zn)) %>%
+  melt(id.vars = "medv") %>%
+  ggplot(aes(x = value, y = medv, colour = variable)) +
+  geom_point(alpha = 0.5) +
+  stat_smooth(aes(colour = "black")) +
+  facet_wrap(~variable, scales = "free", ncol = 2) +
+  labs(x = "Variable Value", y = "Median House Price ($1000s)") +
+  theme_minimal()
+```
+
+* Conslusion: crime, lstat and rm seem to be good linear variables but things like rad or tax is not linear, in fact the relationship is quite complicated.
+
+4. Simple linear regression
+1) Train and Test 
+```{r}
+set.seed(123)
+split <- sample.split(housing,SplitRatio =0.75)
+train <- subset(housing,split==TRUE)
+test <- subset(housing,split==FALSE)
+```
+
+2) Build our model considering that crim,rm,and lstat as the major influencers on the target variable.
+```{r}
+model <- lm(medv ~ crim + rm + lstat , data = train)
+summary(model)
+```
+3) Covert residuals into the dataframes
+```{r warning =FALSE, error=FALSE}
+res <- residuals(model)
+res <- as.data.frame(res)
+
+ggplot(res,aes(res)) +  geom_histogram(fill='blue',alpha=0.5)
+```
+```{r}
+plot(model)
+```
+
+//Here, I would also like to regress variable age on medv and summary the result.
+```{r}
+fit1=lm(medv~age,data=housing)
+plot(medv~age,housing)
+abline(fit1,col="red")
+summary(fit1)
+```
+* Conclusion: from the summary, we can see that 30.97868 is the intercept and -0.12316 is the slope, which means if the age = 30%, the medv would equal to 27.28388. 
+
+4) Test the model by predicting on our testing dataset.
+```{r warning = FALSE, error=FALSE}
+test$predicted.medv <- predict(model,test)
+
+pl1 <-test %>% 
+  ggplot(aes(medv,predicted.medv)) +
+  geom_point(alpha=0.5) + 
+  stat_smooth(aes(colour='black')) +
+  xlab('Actual value of medv') +
+  ylab('Predicted value of medv')+
+  theme_bw()
+
+ggplotly(pl1)
+```
+
+Conclusion: This is how we could use linear regression on predicting houseing price with database Boston housing. And the model will be further improved by expanded database and more traning in the future.
+
