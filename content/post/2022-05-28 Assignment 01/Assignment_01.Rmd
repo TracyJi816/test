@@ -2,12 +2,175 @@
 title: "Assignment_1"
 author: "Tracy_Ji"
 date: "28/05/2022"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+Data Analysis of Professor's Diamond Ring
+```{r warning=FALSE, error=FALSE}
+library(readr)
+library(dplyr)
+library(shiny)
+library(readxl)
+library(corrplot)
+library(ggplot2)
+library(janitor)
+
+```
+# Firstly,  we need load the Dataset(Professor_Proposes_Data) and clean it. 
+```{r}
+Professor_Proposes_Data <- read_excel("Professor_Proposes_Data.xlsx")
+Diamond <- Professor_Proposes_Data
+summary(Diamond)
+anyNA(Diamond)
+```
+* Conclusion: Through summary above, we could see that this dataset contains 440 different diamonds and it is free from NA's; Carat, Colour, Clarity, Cut, Polish, Certification and Symmetry are considered to be the determinants of the Price, a few of these variables are numeric while others are explanatory.
+
+#  Secondly, we need make sure our data meet the assumptions.e.g., we could check whether the dependent variable Price follows a normal distribution.
+
+1. Analysis of Price 
+```{r}
+tmp = hist(Diamond$Price)
+lines(c(min(tmp$breaks),tmp$mids,max(tmp$breaks)),c(0,tmp$counts,0),type="l")
+```
+* Finding 1:From step 1, we know that the prices are from 160 to 3145 and from step 2, we could see that there are clearly two separate and independent peaks: 500~1000 and 3000~3500, which means the price has the bimodal distribution. That is being said, diamonds are usually in two pricing ranges:less than 1000 and more than 1500.
+
+2. Analysis of Carat
+```{r}
+tmp = hist(Diamond$Carat)
+lines(c(min(tmp$breaks),tmp$mids,max(tmp$breaks)),c(0,tmp$counts,0),type="l")
+
+```
+* Finding 2:From step 1, we know that the carats are from 0.09 to 1.58 and from step 2, we could see that there are clearly two separate and independent peaks, which means the carats has the bimodal distribution. That is being said, diamonds are usually in two carats ranges:0.09~0.3 and 0.81~1.58.
+
+3. Analysis of Clarity
+```{r}
+
+library(janitor)
+tabyl(Diamond$Clarity, sort = TRUE)
+
+```
+* Finding 3. Clarity in VVS1&2 only take a small percents among all ranges in Clarity. 
+
+4. Analysis of Cut
+```{r}
+library(janitor)
+tabyl(Diamond$Cut, sort = TRUE)
+```
+* Finding 4. X(Excellent) in takes the most percentage among all ranges of Cut.
+
+5. Analysis of Colour
+```{r}
+library(janitor)
+tabyl(Diamond$Colour, sort = TRUE)
+```
+* Finding 5. Colour D-I take more than 71% among all ranges of Colour.
+
+6. Analysis of Polish
+```{r}
+library(janitor)
+tabyl(Diamond$Polish, sort = TRUE)
+```
+* Finding 6. G+x+V(Good,Excellent,Very Good) take more than 96% among all ranges of Polish.
+
+7. Analysis of Symmetry
+```{r}
+library(janitor)
+tabyl(Diamond$Symmetry, sort = TRUE)
+```
+* Finding 7. G+x+V(Good,Excellent,Very Good) take more than 92% among all ranges of Symmertry.
+
+
+8. Analysis of Certification
+```{r}
+library(janitor)
+tabyl(Diamond$Certification, sort = TRUE)
+```
+* Finding 8. EGL+GIA take more than 87% among all ranges of Certification.
+
+# Next, we will test the relationship between the independent and dependent(price) variables
+1) carat vs. Price
+```{r}
+model <- lm(Price ~ Carat, data = Diamond)
+summary(model)
+``` 
+
+```{r}
+ggplot(aes(Carat, Price), data = Diamond) + geom_point (fill=I("#F79420"), color=I("red"), shape=21) + geom_smooth (method = "lm", color = "green", se = FALSE)
+``` 
+* Finding 9. It is clear that there are two clusters with low carat diamonds having low prices and higher carat diamonds having higher prices.
+
+## Regression & Correlation with Carat
+```{r}
+cor(Diamond$Carat, Diamond$Price)
+``` 
+
+```{r}
+NewData <- read_excel("NewData2.xlsx")
+
+model1 <- lm(Price ~ Carat, data = NewData)
+summary(model1)
+``` 
+* Finding 10.  Carat and Price have high correlation and since Carat has significant two clusters and Professor's diamond ring is 0.9, I used the large carat cluster(>0.8) to have a more suitable regression model. This model has R-square = 10.72% and p-value is < 2.2e-16 which means the model is useful. However, the regression coefficient is negative, which means we also need to consider other dummy variables when we look at the relationship between price and large carat.
+
+## Regression with Clarity
+
+```{r}
+model2 <- lm(Price ~ Clarity, data = NewData)
+summary(model2)
+``` 
+* Finding 11.  This model has R-square = 40.57% and p-value is < 2.2e-16 which means the model is useful. 
+
+
+## Regression with Cut
+```{r}
+model3 <- lm(Price ~ Cut, data = NewData)
+summary(model3)
+``` 
+* Finding 12. This model has R-square = 14.4% and p-value is < 2.094e-07. 
+
+## Regression with Colour
+```{r}
+model4 <- lm(Price ~ Colour, data = NewData)
+summary(model4)
+``` 
+* Finding 13. Since Colour D-I take more than 71% among all ranges of Colour and Professor's diamond ring is colour J, I classified COlour into 2 groups: (J-L) and (D-I) to have a more suitable regression model.This model use Colour J-L to calculate coef so the R-square = 2.1% is somewhat not significant and p-value is 0.02194. 
+
+## Regression with Polish
+```{r}
+model5 <- lm(Price ~ Polish, data = NewData)
+summary(model5)
+``` 
+* Finding 14. This model has R-square = 15.05% and p-value is 3.125e-07.This variable may have small impact to price.
+
+## Regression with Certificate
+```{r}
+model6 <- lm(Price ~ Certification, data = NewData)
+summary(model6)
+``` 
+* Finding 15.This model has R-square = 8.15% and p-value: 0.0001607, which indicate that certification does not has a strong relation with price.
+
+## Regression with Symmetry
+```{r}
+model7 <- lm(Price ~ Symmetry, data = NewData)
+summary(model7)
+``` 
+* Finding 16.This model has R-square = 14.09% and p-value = 3.104e-07, which show that Symmetry may have small impact to price.
+
+# Make prediction with Professors' Diamond Ring
+```{r}
+model <- lm(Price ~ Carat + Colour + Clarity + Cut + Symmetry + Certification + Polish, data = NewData)
+summary(model)
+na.omit(model)
+
+ProfDiamond = data.frame(Carat = 1, Cut = "V",
+                         Colour = "J-L", Clarity="SI2",Polish= "G", Symmetry="V", Certification= "GIA")
+
+prediction = predict(model, newdata = ProfDiamond,
+                        interval="prediction", level = .95) 
 ```
 
-## R Markdown
-
+# Conclusion 
+a. Carat, Clarity and Color seem to have strong relations with Price while Certification , Polish and Symmetry does not have significant impact on Price. 
+b. Based on the linear regression model, we could see that predicated price = $2957.89 < $3100, so the Professor should not buy this diamond ring with the price of $3100.

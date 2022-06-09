@@ -1,0 +1,491 @@
+---
+title: "Assignment_1"
+author: "Tracy_Ji"
+date: "28/05/2022"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>Data Analysis of Professor’s Diamond Ring</p>
+<pre class="r"><code>library(readr)
+library(dplyr)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>library(shiny)
+library(readxl)
+library(corrplot)</code></pre>
+<pre><code>## corrplot 0.89 loaded</code></pre>
+<pre class="r"><code>library(ggplot2)
+library(janitor)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;janitor&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     chisq.test, fisher.test</code></pre>
+<div id="firstly-we-need-load-the-datasetprofessor_proposes_data-and-clean-it." class="section level1">
+<h1>Firstly, we need load the Dataset(Professor_Proposes_Data) and clean it.</h1>
+<pre class="r"><code>Professor_Proposes_Data &lt;- read_excel(&quot;Professor_Proposes_Data.xlsx&quot;)
+Diamond &lt;- Professor_Proposes_Data
+summary(Diamond)</code></pre>
+<pre><code>##      Carat           Colour            Clarity              Cut           
+##  Min.   :0.0900   Length:440         Length:440         Length:440        
+##  1st Qu.:0.3000   Class :character   Class :character   Class :character  
+##  Median :0.8100   Mode  :character   Mode  :character   Mode  :character  
+##  Mean   :0.6693                                                           
+##  3rd Qu.:1.0100                                                           
+##  Max.   :1.5800                                                           
+##  Certification         Polish            Symmetry             Price     
+##  Length:440         Length:440         Length:440         Min.   : 160  
+##  Class :character   Class :character   Class :character   1st Qu.: 520  
+##  Mode  :character   Mode  :character   Mode  :character   Median :2169  
+##                                                           Mean   :1717  
+##                                                           3rd Qu.:3012  
+##                                                           Max.   :3145  
+##    Wholesaler   
+##  Min.   :1.000  
+##  1st Qu.:2.000  
+##  Median :2.000  
+##  Mean   :2.318  
+##  3rd Qu.:3.000  
+##  Max.   :3.000</code></pre>
+<pre class="r"><code>anyNA(Diamond)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<ul>
+<li>Conclusion: Through summary above, we could see that this dataset contains 440 different diamonds and it is free from NA’s; Carat, Colour, Clarity, Cut, Polish, Certification and Symmetry are considered to be the determinants of the Price, a few of these variables are numeric while others are explanatory.</li>
+</ul>
+</div>
+<div id="secondly-we-need-make-sure-our-data-meet-the-assumptions.e.g.-we-could-check-whether-the-dependent-variable-price-follows-a-normal-distribution." class="section level1">
+<h1>Secondly, we need make sure our data meet the assumptions.e.g., we could check whether the dependent variable Price follows a normal distribution.</h1>
+<ol style="list-style-type: decimal">
+<li>Analysis of Price</li>
+</ol>
+<pre class="r"><code>tmp = hist(Diamond$Price)
+lines(c(min(tmp$breaks),tmp$mids,max(tmp$breaks)),c(0,tmp$counts,0),type=&quot;l&quot;)</code></pre>
+<p><img src="/post/2022-05-28 Assignment 01/Assignment_01_files/figure-html/unnamed-chunk-3-1.png" width="672" />
+* Finding 1:From step 1, we know that the prices are from 160 to 3145 and from step 2, we could see that there are clearly two separate and independent peaks: 500~1000 and 3000~3500, which means the price has the bimodal distribution. That is being said, diamonds are usually in two pricing ranges:less than 1000 and more than 1500.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>Analysis of Carat</li>
+</ol>
+<pre class="r"><code>tmp = hist(Diamond$Carat)
+lines(c(min(tmp$breaks),tmp$mids,max(tmp$breaks)),c(0,tmp$counts,0),type=&quot;l&quot;)</code></pre>
+<p><img src="/post/2022-05-28 Assignment 01/Assignment_01_files/figure-html/unnamed-chunk-4-1.png" width="672" />
+* Finding 2:From step 1, we know that the carats are from 0.09 to 1.58 and from step 2, we could see that there are clearly two separate and independent peaks, which means the carats has the bimodal distribution. That is being said, diamonds are usually in two carats ranges:0.09~0.3 and 0.81~1.58.</p>
+<ol start="3" style="list-style-type: decimal">
+<li>Analysis of Clarity</li>
+</ol>
+<pre class="r"><code>library(janitor)
+tabyl(Diamond$Clarity, sort = TRUE)</code></pre>
+<pre><code>##  Diamond$Clarity   n     percent
+##               I1  82 0.186363636
+##               I2  28 0.063636364
+##              SI1 116 0.263636364
+##              SI2 110 0.250000000
+##              SI3  26 0.059090909
+##              VS1  30 0.068181818
+##              VS2  41 0.093181818
+##             VVS1   2 0.004545455
+##             VVS2   5 0.011363636</code></pre>
+<ul>
+<li>Finding 3. Clarity in VVS1&amp;2 only take a small percents among all ranges in Clarity.</li>
+</ul>
+<ol start="4" style="list-style-type: decimal">
+<li>Analysis of Cut</li>
+</ol>
+<pre class="r"><code>library(janitor)
+tabyl(Diamond$Cut, sort = TRUE)</code></pre>
+<pre><code>##  Diamond$Cut   n   percent
+##            F  59 0.1340909
+##            G  49 0.1113636
+##            I  86 0.1954545
+##            V  97 0.2204545
+##            X 149 0.3386364</code></pre>
+<ul>
+<li>Finding 4. X(Excellent) in takes the most percentage among all ranges of Cut.</li>
+</ul>
+<ol start="5" style="list-style-type: decimal">
+<li>Analysis of Colour</li>
+</ol>
+<pre class="r"><code>library(janitor)
+tabyl(Diamond$Colour, sort = TRUE)</code></pre>
+<pre><code>##  Diamond$Colour  n    percent
+##               D 20 0.04545455
+##               E 54 0.12272727
+##               F 58 0.13181818
+##               G 43 0.09772727
+##               H 71 0.16136364
+##               I 79 0.17954545
+##               J 72 0.16363636
+##               K 31 0.07045455
+##               L 12 0.02727273</code></pre>
+<ul>
+<li>Finding 5. Colour D-I take more than 71% among all ranges of Colour.</li>
+</ul>
+<ol start="6" style="list-style-type: decimal">
+<li>Analysis of Polish</li>
+</ol>
+<pre class="r"><code>library(janitor)
+tabyl(Diamond$Polish, sort = TRUE)</code></pre>
+<pre><code>##  Diamond$Polish   n     percent
+##               F   5 0.011363636
+##               G 165 0.375000000
+##               I   5 0.011363636
+##               v   1 0.002272727
+##               V 203 0.461363636
+##               X  61 0.138636364</code></pre>
+<ul>
+<li>Finding 6. G+x+V(Good,Excellent,Very Good) take more than 96% among all ranges of Polish.</li>
+</ul>
+<ol start="7" style="list-style-type: decimal">
+<li>Analysis of Symmetry</li>
+</ol>
+<pre class="r"><code>library(janitor)
+tabyl(Diamond$Symmetry, sort = TRUE)</code></pre>
+<pre><code>##  Diamond$Symmetry   n    percent
+##                 F  21 0.04772727
+##                 G 157 0.35681818
+##                 I   5 0.01136364
+##                 V 206 0.46818182
+##                 X  51 0.11590909</code></pre>
+<ul>
+<li>Finding 7. G+x+V(Good,Excellent,Very Good) take more than 92% among all ranges of Symmertry.</li>
+</ul>
+<ol start="8" style="list-style-type: decimal">
+<li>Analysis of Certification</li>
+</ol>
+<pre class="r"><code>library(janitor)
+tabyl(Diamond$Certification, sort = TRUE)</code></pre>
+<pre><code>##  Diamond$Certification   n     percent
+##                    AGS  12 0.027272727
+##                    DOW   1 0.002272727
+##                    EGL 119 0.270454545
+##                    GIA 265 0.602272727
+##                    IGI  43 0.097727273</code></pre>
+<ul>
+<li>Finding 8. EGL+GIA take more than 87% among all ranges of Certification.</li>
+</ul>
+</div>
+<div id="next-we-will-test-the-relationship-between-the-independent-and-dependentprice-variables" class="section level1">
+<h1>Next, we will test the relationship between the independent and dependent(price) variables</h1>
+<ol style="list-style-type: decimal">
+<li>carat vs. Price</li>
+</ol>
+<pre class="r"><code>model &lt;- lm(Price ~ Carat, data = Diamond)
+summary(model)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Price ~ Carat, data = Diamond)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -1705.8  -165.9  -111.9   135.2   994.7 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  -200.48      43.11   -4.65  4.4e-06 ***
+## Carat        2864.73      56.04   51.12  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 446 on 438 degrees of freedom
+## Multiple R-squared:  0.8564, Adjusted R-squared:  0.8561 
+## F-statistic:  2613 on 1 and 438 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>ggplot(aes(Carat, Price), data = Diamond) + geom_point (fill=I(&quot;#F79420&quot;), color=I(&quot;red&quot;), shape=21) + geom_smooth (method = &quot;lm&quot;, color = &quot;green&quot;, se = FALSE)</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="/post/2022-05-28 Assignment 01/Assignment_01_files/figure-html/unnamed-chunk-12-1.png" width="672" />
+* Finding 9. It is clear that there are two clusters with low carat diamonds having low prices and higher carat diamonds having higher prices.</p>
+<div id="regression-correlation-with-carat" class="section level2">
+<h2>Regression &amp; Correlation with Carat</h2>
+<pre class="r"><code>cor(Diamond$Carat, Diamond$Price)</code></pre>
+<pre><code>## [1] 0.925436</code></pre>
+<pre class="r"><code>NewData &lt;- read_excel(&quot;NewData2.xlsx&quot;)
+
+model1 &lt;- lm(Price ~ Carat, data = NewData)
+summary(model1)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Price ~ Carat, data = NewData)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -904.4 -245.2   76.3  336.7  769.3 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   3741.0      185.4  20.176  &lt; 2e-16 ***
+## Carat         -980.6      183.5  -5.345 2.12e-07 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 347.9 on 238 degrees of freedom
+## Multiple R-squared:  0.1072, Adjusted R-squared:  0.1034 
+## F-statistic: 28.56 on 1 and 238 DF,  p-value: 2.12e-07</code></pre>
+<ul>
+<li>Finding 10. Carat and Price have high correlation and since Carat has significant two clusters and Professor’s diamond ring is 0.9, I used the large carat cluster(&gt;0.8) to have a more suitable regression model. This model has R-square = 10.72% and p-value is &lt; 2.2e-16 which means the model is useful. However, the regression coefficient is negative, which means we also need to consider other dummy variables when we look at the relationship between price and large carat.</li>
+</ul>
+</div>
+<div id="regression-with-clarity" class="section level2">
+<h2>Regression with Clarity</h2>
+<pre class="r"><code>model2 &lt;- lm(Price ~ Clarity, data = NewData)
+summary(model2)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Price ~ Clarity, data = NewData)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -763.38 -212.16   30.87  124.34  776.37 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 2622.911     32.273  81.272  &lt; 2e-16 ***
+## ClarityI2   -291.282     63.946  -4.555 8.44e-06 ***
+## ClarityIS     -2.911    288.660  -0.010    0.992    
+## ClaritySI1   376.607     63.946   5.889 1.34e-08 ***
+## ClaritySI2   368.012     48.036   7.661 4.92e-13 ***
+## ClaritySI3    -3.527     64.856  -0.054    0.957    
+## ClarityVS    407.822     80.790   5.048 9.00e-07 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 286.8 on 233 degrees of freedom
+## Multiple R-squared:  0.4057, Adjusted R-squared:  0.3904 
+## F-statistic: 26.51 on 6 and 233 DF,  p-value: &lt; 2.2e-16</code></pre>
+<ul>
+<li>Finding 11. This model has R-square = 40.57% and p-value is &lt; 2.2e-16 which means the model is useful.</li>
+</ul>
+</div>
+<div id="regression-with-cut" class="section level2">
+<h2>Regression with Cut</h2>
+<pre class="r"><code>model3 &lt;- lm(Price ~ Cut, data = NewData)
+summary(model3)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Price ~ Cut, data = NewData)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -784.76 -250.84   47.48  269.99  578.16 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  2559.84      45.81  55.883  &lt; 2e-16 ***
+## CutG          190.93      74.53   2.562  0.01104 *  
+## CutI          331.69      68.63   4.833 2.43e-06 ***
+## CutV          442.68      80.31   5.512 9.32e-08 ***
+## CutX          179.67      60.04   2.993  0.00306 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 342.8 on 235 degrees of freedom
+## Multiple R-squared:  0.144,  Adjusted R-squared:  0.1294 
+## F-statistic: 9.881 on 4 and 235 DF,  p-value: 2.094e-07</code></pre>
+<ul>
+<li>Finding 12. This model has R-square = 14.4% and p-value is &lt; 2.094e-07.</li>
+</ul>
+</div>
+<div id="regression-with-colour" class="section level2">
+<h2>Regression with Colour</h2>
+<pre class="r"><code>model4 &lt;- lm(Price ~ Colour, data = NewData)
+summary(model4)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Price ~ Colour, data = NewData)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -866.2 -284.2  152.4  290.8  465.1 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  2795.25      28.70  97.411   &lt;2e-16 ***
+## ColourJ-L    -115.36      50.02  -2.307   0.0219 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 364.1 on 238 degrees of freedom
+## Multiple R-squared:  0.02186,    Adjusted R-squared:  0.01775 
+## F-statistic:  5.32 on 1 and 238 DF,  p-value: 0.02194</code></pre>
+<ul>
+<li>Finding 13. Since Colour D-I take more than 71% among all ranges of Colour and Professor’s diamond ring is colour J, I classified COlour into 2 groups: (J-L) and (D-I) to have a more suitable regression model.This model use Colour J-L to calculate coef so the R-square = 2.1% is somewhat not significant and p-value is 0.02194.</li>
+</ul>
+</div>
+<div id="regression-with-polish" class="section level2">
+<h2>Regression with Polish</h2>
+<pre class="r"><code>model5 &lt;- lm(Price ~ Polish, data = NewData)
+summary(model5)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Price ~ Polish, data = NewData)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -953.29 -242.03   47.46  266.81  501.21 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   2318.6      153.0  15.150  &lt; 2e-16 ***
+## PolishG        325.2      156.4   2.079 0.038707 *  
+## PolishI        728.8      216.4   3.367 0.000887 ***
+## Polishv        762.4      374.9   2.034 0.043103 *  
+## PolishV        521.8      157.0   3.324 0.001029 ** 
+## PolishX        683.7      170.3   4.015 8.01e-05 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 342.2 on 234 degrees of freedom
+## Multiple R-squared:  0.1505, Adjusted R-squared:  0.1323 
+## F-statistic: 8.291 on 5 and 234 DF,  p-value: 3.125e-07</code></pre>
+<ul>
+<li>Finding 14. This model has R-square = 15.05% and p-value is 3.125e-07.This variable may have small impact to price.</li>
+</ul>
+</div>
+<div id="regression-with-certificate" class="section level2">
+<h2>Regression with Certificate</h2>
+<pre class="r"><code>model6 &lt;- lm(Price ~ Certification, data = NewData)
+summary(model6)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Price ~ Certification, data = NewData)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -902.85 -263.85   34.38  263.40  467.17 
+## 
+## Coefficients:
+##                  Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)        3033.4      102.3  29.657  &lt; 2e-16 ***
+## CertificationDOW  -1002.4      368.8  -2.718  0.00705 ** 
+## CertificationEGL   -355.6      107.3  -3.313  0.00107 ** 
+## CertificationGIA   -212.6      107.8  -1.972  0.04983 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 354.3 on 236 degrees of freedom
+## Multiple R-squared:  0.08153,    Adjusted R-squared:  0.06986 
+## F-statistic: 6.983 on 3 and 236 DF,  p-value: 0.0001607</code></pre>
+<ul>
+<li>Finding 15.This model has R-square = 8.15% and p-value: 0.0001607, which indicate that certification does not has a strong relation with price.</li>
+</ul>
+</div>
+<div id="regression-with-symmetry" class="section level2">
+<h2>Regression with Symmetry</h2>
+<pre class="r"><code>model7 &lt;- lm(Price ~ Symmetry, data = NewData)
+summary(model7)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Price ~ Symmetry, data = NewData)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -927.68 -249.08   79.35  289.32  692.71 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  2432.29      74.93  32.459  &lt; 2e-16 ***
+## SymmetryG     260.79      82.15   3.174 0.001702 ** 
+## SymmetryI     615.11     170.88   3.600 0.000388 ***
+## SymmetryV     413.39      83.78   4.934 1.52e-06 ***
+## SymmetryX     502.87     100.75   4.991 1.17e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 343.4 on 235 degrees of freedom
+## Multiple R-squared:  0.1409, Adjusted R-squared:  0.1263 
+## F-statistic: 9.639 on 4 and 235 DF,  p-value: 3.104e-07</code></pre>
+<ul>
+<li>Finding 16.This model has R-square = 14.09% and p-value = 3.104e-07, which show that Symmetry may have small impact to price.</li>
+</ul>
+</div>
+</div>
+<div id="make-prediction-with-professors-diamond-ring" class="section level1">
+<h1>Make prediction with Professors’ Diamond Ring</h1>
+<pre class="r"><code>model &lt;- lm(Price ~ Carat + Colour + Clarity + Cut + Symmetry + Certification + Polish, data = NewData)
+summary(model)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Price ~ Carat + Colour + Clarity + Cut + Symmetry + 
+##     Certification + Polish, data = NewData)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -544.36 -127.79  -14.19  145.44  612.48 
+## 
+## Coefficients: (1 not defined because of singularities)
+##                  Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)        642.76     263.22   2.442 0.015412 *  
+## Carat             1730.82     220.50   7.850 1.92e-13 ***
+## ColourJ-L         -366.08      39.65  -9.233  &lt; 2e-16 ***
+## ClarityI2         -540.40      60.77  -8.892 2.42e-16 ***
+## ClarityIS         -447.28     284.42  -1.573 0.117266    
+## ClaritySI1         640.12      65.84   9.723  &lt; 2e-16 ***
+## ClaritySI2         561.97      48.75  11.528  &lt; 2e-16 ***
+## ClaritySI3         213.83      56.56   3.781 0.000202 ***
+## ClarityVS          663.69      84.36   7.867 1.73e-13 ***
+## CutG                28.76      52.77   0.545 0.586292    
+## CutI                50.45      58.15   0.868 0.386558    
+## CutV                63.03      66.55   0.947 0.344654    
+## CutX               120.49      44.97   2.680 0.007940 ** 
+## SymmetryG          144.33      65.28   2.211 0.028086 *  
+## SymmetryI          279.40     194.26   1.438 0.151794    
+## SymmetryV          160.12      71.63   2.235 0.026429 *  
+## SymmetryX          217.77      91.10   2.390 0.017686 *  
+## CertificationDOW  -223.09     254.14  -0.878 0.380998    
+## CertificationEGL  -142.52      95.48  -1.493 0.136975    
+## CertificationGIA    55.91      92.38   0.605 0.545708    
+## PolishG            109.36     132.35   0.826 0.409547    
+## PolishI                NA         NA      NA       NA    
+## Polishv            118.30     267.77   0.442 0.659077    
+## PolishV            123.32     139.31   0.885 0.377021    
+## PolishX            117.88     150.60   0.783 0.434663    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 224.1 on 216 degrees of freedom
+## Multiple R-squared:  0.6636, Adjusted R-squared:  0.6277 
+## F-statistic: 18.52 on 23 and 216 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>na.omit(model)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Price ~ Carat + Colour + Clarity + Cut + Symmetry + 
+##     Certification + Polish, data = NewData)
+## 
+## Coefficients:
+##      (Intercept)             Carat         ColourJ-L         ClarityI2  
+##           642.76           1730.82           -366.08           -540.40  
+##        ClarityIS        ClaritySI1        ClaritySI2        ClaritySI3  
+##          -447.28            640.12            561.97            213.83  
+##        ClarityVS              CutG              CutI              CutV  
+##           663.69             28.76             50.45             63.03  
+##             CutX         SymmetryG         SymmetryI         SymmetryV  
+##           120.49            144.33            279.40            160.12  
+##        SymmetryX  CertificationDOW  CertificationEGL  CertificationGIA  
+##           217.77           -223.09           -142.52             55.91  
+##          PolishG           PolishI           Polishv           PolishV  
+##           109.36                NA            118.30            123.32  
+##          PolishX  
+##           117.88</code></pre>
+<pre class="r"><code>ProfDiamond = data.frame(Carat = 1, Cut = &quot;V&quot;,
+                         Colour = &quot;J-L&quot;, Clarity=&quot;SI2&quot;,Polish= &quot;G&quot;, Symmetry=&quot;V&quot;, Certification= &quot;GIA&quot;)
+
+prediction = predict(model, newdata = ProfDiamond,
+                        interval=&quot;prediction&quot;, level = .95) </code></pre>
+<pre><code>## Warning in predict.lm(model, newdata = ProfDiamond, interval = &quot;prediction&quot;, :
+## prediction from a rank-deficient fit may be misleading</code></pre>
+</div>
+<div id="conclusion" class="section level1">
+<h1>Conclusion</h1>
+<ol style="list-style-type: lower-alpha">
+<li>Carat, Clarity and Color seem to have strong relations with Price while Certification , Polish and Symmetry does not have significant impact on Price.</li>
+<li>Based on the linear regression model, we could see that predicated price = $2957.89 &lt; $3100, so the Professor should not buy this diamond ring with the price of $3100.</li>
+</ol>
+</div>
