@@ -1,0 +1,40 @@
+---
+title: Assignment 2
+author: Xiao Ji
+date: '2022-06-18'
+slug: assignment-2
+categories: [logistic regression]
+tags: []
+---
+Assignment 2 Bank Marketing Dataset
+
+We Need:
+a.Build a logistic regression model
+b.We need to identify whether a customer will subscribe to a term deposit or not.
+c.We need not use all the variables, If we are comfortable you can perform factor analysis on predictor variables.
+d.Build a simple model and focus on interpretation and communication of our insights from the analysis.
+
+```{r warning=FALSE, error=FALSE}
+library(readr)
+library(dplyr)
+library(shiny)
+library(readxl)
+library(corrplot)
+library(ggplot2)
+library(janitor)
+library(tidyverse)
+library(caret)
+library(AppliedPredictiveModeling)
+library(e1071)
+```
+# Firstly,  we need load the Dataset(Bank Market Dataset) and clean it. 
+```{r}
+bankfull <- read_csv("bank-additional-full.csv")
+## summarize a quick snapshot of our data set
+summary(bankfull)
+str(bankfull)
+## Check for missing values
+sum(is.na(bankfull))
+```
+
+*Here we found that there was no missing values in our dataset.

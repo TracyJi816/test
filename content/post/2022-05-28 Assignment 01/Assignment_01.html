@@ -32,6 +32,14 @@ library(janitor)</code></pre>
 <pre><code>## The following objects are masked from &#39;package:stats&#39;:
 ## 
 ##     chisq.test, fisher.test</code></pre>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --</code></pre>
+<pre><code>## v tibble  3.1.1     v stringr 1.4.0
+## v tidyr   1.1.3     v forcats 0.5.1
+## v purrr   0.3.4</code></pre>
+<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
 <div id="firstly-we-need-load-the-datasetprofessor_proposes_data-and-clean-it." class="section level1">
 <h1>Firstly, we need load the Dataset(Professor_Proposes_Data) and clean it.</h1>
 <pre class="r"><code>Professor_Proposes_Data &lt;- read_excel(&quot;Professor_Proposes_Data.xlsx&quot;)
@@ -174,11 +182,22 @@ tabyl(Diamond$Certification, sort = TRUE)</code></pre>
 <li>Finding 8. EGL+GIA take more than 87% among all ranges of Certification.</li>
 </ul>
 </div>
-<div id="next-we-will-test-the-relationship-between-the-independent-and-dependentprice-variables" class="section level1">
-<h1>Next, we will test the relationship between the independent and dependent(price) variables</h1>
+<div id="next-we-will-test-the-relationship-between-the-independent-and-dependentprice-variables.and-in-order-to-have-a-better-regression-model-i-have-manually-cleaned-the-dataset-based-on-the-findings-above." class="section level1">
+<h1>Next, we will test the relationship between the independent and dependent(price) variables.And, in order to have a better regression model, I have manually cleaned the dataset based on the findings above.</h1>
 <ol style="list-style-type: decimal">
 <li>carat vs. Price</li>
 </ol>
+<pre class="r"><code>NewData &lt;- read_excel(&quot;NewData2.xlsx&quot;)
+head(NewData)</code></pre>
+<pre><code>## # A tibble: 6 x 9
+##   Carat Colour Clarity Cut   Certification Polish Symmetry Price Wholesaler
+##   &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;         &lt;chr&gt;  &lt;chr&gt;    &lt;dbl&gt;      &lt;dbl&gt;
+## 1  1.58 J-L    IS      F     GIA           F      F         2620          2
+## 2  1.43 D-I    I2      X     GIA           G      G         3108          2
+## 3  1.41 J-L    I2      X     GIA           G      G         2704          2
+## 4  1.33 J-L    SI3     X     EGL           G      V         2607          2
+## 5  1.26 J-L    I1      X     GIA           V      G         3125          2
+## 6  1.25 J-L    I2      F     GIA           G      G         2397          2</code></pre>
 <pre class="r"><code>model &lt;- lm(Price ~ Carat, data = Diamond)
 summary(model)</code></pre>
 <pre><code>## 
@@ -207,9 +226,7 @@ summary(model)</code></pre>
 <h2>Regression &amp; Correlation with Carat</h2>
 <pre class="r"><code>cor(Diamond$Carat, Diamond$Price)</code></pre>
 <pre><code>## [1] 0.925436</code></pre>
-<pre class="r"><code>NewData &lt;- read_excel(&quot;NewData2.xlsx&quot;)
-
-model1 &lt;- lm(Price ~ Carat, data = NewData)
+<pre class="r"><code>model1 &lt;- lm(Price ~ Carat, data = NewData)
 summary(model1)</code></pre>
 <pre><code>## 
 ## Call:

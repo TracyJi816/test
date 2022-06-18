@@ -16,6 +16,7 @@ library(readxl)
 library(corrplot)
 library(ggplot2)
 library(janitor)
+library(tidyverse)
 
 ```
 # Firstly,  we need load the Dataset(Professor_Proposes_Data) and clean it. 
@@ -89,9 +90,11 @@ tabyl(Diamond$Certification, sort = TRUE)
 ```
 * Finding 8. EGL+GIA take more than 87% among all ranges of Certification.
 
-# Next, we will test the relationship between the independent and dependent(price) variables
+# Next, we will test the relationship between the independent and dependent(price) variables.And, in order to have a better regression model, I have manually cleaned the dataset based on the findings above.
 1) carat vs. Price
 ```{r}
+NewData <- read_excel("NewData2.xlsx")
+head(NewData)
 model <- lm(Price ~ Carat, data = Diamond)
 summary(model)
 ``` 
@@ -106,9 +109,8 @@ ggplot(aes(Carat, Price), data = Diamond) + geom_point (fill=I("#F79420"), color
 cor(Diamond$Carat, Diamond$Price)
 ``` 
 
-```{r}
-NewData <- read_excel("NewData2.xlsx")
 
+```{r}
 model1 <- lm(Price ~ Carat, data = NewData)
 summary(model1)
 ``` 

@@ -1,0 +1,82 @@
+---
+title: Assignment 2
+author: Xiao Ji
+date: '2022-06-18'
+slug: assignment-2
+categories: [logistic regression]
+tags: []
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>Assignment 2 Bank Marketing Dataset</p>
+<p>We Need:
+a.Build a logistic regression model
+b.We need to identify whether a customer will subscribe to a term deposit or not.
+c.We need not use all the variables, If we are comfortable you can perform factor analysis on predictor variables.
+d.Build a simple model and focus on interpretation and communication of our insights from the analysis.</p>
+<pre class="r"><code>library(readr)
+library(dplyr)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>library(shiny)
+library(readxl)
+library(corrplot)</code></pre>
+<pre><code>## corrplot 0.89 loaded</code></pre>
+<pre class="r"><code>library(ggplot2)
+library(janitor)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;janitor&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     chisq.test, fisher.test</code></pre>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --</code></pre>
+<pre><code>## v tibble  3.1.1     v stringr 1.4.0
+## v tidyr   1.1.3     v forcats 0.5.1
+## v purrr   0.3.4</code></pre>
+<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(caret)</code></pre>
+<pre><code>## Loading required package: lattice</code></pre>
+<pre><code>## 
+## Attaching package: &#39;caret&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     lift</code></pre>
+<pre class="r"><code>library(AppliedPredictiveModeling)
+library(e1071)</code></pre>
+<div id="firstly-we-need-load-the-datasetbank-market-dataset-and-clean-it." class="section level1">
+<h1>Firstly, we need load the Dataset(Bank Market Dataset) and clean it.</h1>
+<pre class="r"><code>bankfull &lt;- read_csv(&quot;bank-additional-full.csv&quot;)</code></pre>
+<pre><code>## 
+## -- Column specification --------------------------------------------------------
+## cols(
+##   `age&quot;;&quot;job&quot;;&quot;marital&quot;;&quot;education&quot;;&quot;default&quot;;&quot;housing&quot;;&quot;loan&quot;;&quot;contact&quot;;&quot;month&quot;;&quot;day_of_week&quot;;&quot;duration&quot;;&quot;campaign&quot;;&quot;pdays&quot;;&quot;previous&quot;;&quot;poutcome&quot;;&quot;emp.var.rate&quot;;&quot;cons.price.idx&quot;;&quot;cons.conf.idx&quot;;&quot;euribor3m&quot;;&quot;nr.employed&quot;;&quot;y` = col_character()
+## )</code></pre>
+<pre class="r"><code>## summarize a quick snapshot of our data set
+summary(bankfull)</code></pre>
+<pre><code>##  age&quot;;&quot;job&quot;;&quot;marital&quot;;&quot;education&quot;;&quot;default&quot;;&quot;housing&quot;;&quot;loan&quot;;&quot;contact&quot;;&quot;month&quot;;&quot;day_of_week&quot;;&quot;duration&quot;;&quot;campaign&quot;;&quot;pdays&quot;;&quot;previous&quot;;&quot;poutcome&quot;;&quot;emp.var.rate&quot;;&quot;cons.price.idx&quot;;&quot;cons.conf.idx&quot;;&quot;euribor3m&quot;;&quot;nr.employed&quot;;&quot;y
+##  Length:41188                                                                                                                                                                                                                
+##  Class :character                                                                                                                                                                                                            
+##  Mode  :character</code></pre>
+<pre class="r"><code>str(bankfull)</code></pre>
+<pre><code>## spec_tbl_df [41,188 x 1] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+##  $ age&quot;;&quot;job&quot;;&quot;marital&quot;;&quot;education&quot;;&quot;default&quot;;&quot;housing&quot;;&quot;loan&quot;;&quot;contact&quot;;&quot;month&quot;;&quot;day_of_week&quot;;&quot;duration&quot;;&quot;campaign&quot;;&quot;pdays&quot;;&quot;previous&quot;;&quot;poutcome&quot;;&quot;emp.var.rate&quot;;&quot;cons.price.idx&quot;;&quot;cons.conf.idx&quot;;&quot;euribor3m&quot;;&quot;nr.employed&quot;;&quot;y: chr [1:41188] &quot;56;\&quot;housemaid\&quot;;\&quot;married\&quot;;\&quot;basic.4y\&quot;;\&quot;no\&quot;;\&quot;no\&quot;;\&quot;no\&quot;;\&quot;telephone\&quot;;\&quot;may\&quot;;\&quot;mon\&quot;;261;1;999;0;\&quot;none&quot;| __truncated__ &quot;57;\&quot;services\&quot;;\&quot;married\&quot;;\&quot;high.school\&quot;;\&quot;unknown\&quot;;\&quot;no\&quot;;\&quot;no\&quot;;\&quot;telephone\&quot;;\&quot;may\&quot;;\&quot;mon\&quot;;149;1;999;0&quot;| __truncated__ &quot;37;\&quot;services\&quot;;\&quot;married\&quot;;\&quot;high.school\&quot;;\&quot;no\&quot;;\&quot;yes\&quot;;\&quot;no\&quot;;\&quot;telephone\&quot;;\&quot;may\&quot;;\&quot;mon\&quot;;226;1;999;0;\&quot;n&quot;| __truncated__ &quot;40;\&quot;admin.\&quot;;\&quot;married\&quot;;\&quot;basic.6y\&quot;;\&quot;no\&quot;;\&quot;no\&quot;;\&quot;no\&quot;;\&quot;telephone\&quot;;\&quot;may\&quot;;\&quot;mon\&quot;;151;1;999;0;\&quot;nonexis&quot;| __truncated__ ...
+##  - attr(*, &quot;spec&quot;)=
+##   .. cols(
+##   ..   `age&quot;;&quot;job&quot;;&quot;marital&quot;;&quot;education&quot;;&quot;default&quot;;&quot;housing&quot;;&quot;loan&quot;;&quot;contact&quot;;&quot;month&quot;;&quot;day_of_week&quot;;&quot;duration&quot;;&quot;campaign&quot;;&quot;pdays&quot;;&quot;previous&quot;;&quot;poutcome&quot;;&quot;emp.var.rate&quot;;&quot;cons.price.idx&quot;;&quot;cons.conf.idx&quot;;&quot;euribor3m&quot;;&quot;nr.employed&quot;;&quot;y` = col_character()
+##   .. )</code></pre>
+<pre class="r"><code>## Check for missing values
+sum(is.na(bankfull))</code></pre>
+<pre><code>## [1] 0</code></pre>
+<p>*Here we found that there was no missing values in our dataset.</p>
+</div>
